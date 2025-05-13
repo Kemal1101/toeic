@@ -63,7 +63,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ url('/getUsers') }}",
+                url: "{{ route('user.getUsers') }}",
                 type: "GET"
             },
             columns: [

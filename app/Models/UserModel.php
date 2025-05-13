@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\RoleModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Data_PendaftaranModel;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
 class UserModel extends Authenticable
@@ -22,6 +24,11 @@ class UserModel extends Authenticable
     //relasi
     public function role(): belongsTo{
         return $this->belongsTo(RoleModel::class, 'role_id', 'role_id');
+    }
+
+    public function data_pendaftaran(): HasMany
+    {
+        return $this->hasMany(Data_PendaftaranModel::class, 'user_id', 'user_id');
     }
 
 }

@@ -107,9 +107,15 @@
               data-accordion="false"
             >
             <li class="nav-item">
-                <a href="{{ url('/user') }}" class="nav-link {{ request()->is('user') ? 'active' : '' }}">
+                <a href="{{ route('user') }}" class="nav-link {{ request()->is('user') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-person"></i>
                   <p>User</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('pendaftaran') }}" class="nav-link {{ request()->is('pendaftaran') ? 'active' : '' }}">
+                  <i class="bi bi-file-earmark-text"></i>
+                  <p>Pendaftaran</p>
                 </a>
               </li>
               <li class="nav-item">
