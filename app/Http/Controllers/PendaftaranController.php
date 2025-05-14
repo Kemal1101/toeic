@@ -6,6 +6,7 @@ use App\Models\Data_PendaftaranModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class PendaftaranController extends Controller
@@ -74,5 +75,44 @@ class PendaftaranController extends Controller
             'status' => false,
             'message' => 'Request tidak valid'
         ], 400);
+    }
+
+    public function data_pendaftar()
+    {
+        return view('pendaftaran.dataPendaftar');
+    }
+
+    public function getPendaftar(Request $request)
+    {
+        $query = Data_PendaftaranModel::with('user'); // eager loading user (username dan nama_lengkap)
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->tahun);
+        }
+        // jika tidak di-filter, biarkan tampil semua data
+
+
+        return DataTables::of($query)
+            ->addColumn('username', function ($pendaftar) {
+                return $pendaftar->user->username ?? '-';
+            })
+            ->addColumn('nama_lengkap', function ($pendaftar) {
+                return $pendaftar->user->nama_lengkap ?? '-';
+            })
+           ->addColumn('pas_foto', function ($pendaftar) {
+                $url = asset('uploads/pasfoto/' . $pendaftar->pas_foto);
+                return "<img src='{$url}' alt='Pas Foto' width='80'>";
+            })
+            ->addColumn('ktm_atau_ktp', function ($pendaftar) {
+                $url = asset('uploads/ktmktp/' . $pendaftar->ktm_atau_ktp);
+                return "<img src='{$url}' alt='KTP/KTM' width='80'>";
+            })
+            ->rawColumns(['pas_foto', 'ktm_atau_ktp'])
+            // ->addColumn('aksi', function ($pendaftar) {
+            //     // optional: tambahkan tombol aksi jika dibutuhkan
+            //     return '<button class="btn btn-info btn-sm">Detail</button>';
+            // })
+            // ->rawColumns(['aksi']) // jika pakai HTML di kolom
+            ->make(true);
     }
 }

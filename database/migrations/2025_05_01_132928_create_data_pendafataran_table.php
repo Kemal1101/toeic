@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('data_pendaftaran', function (Blueprint $table) {
             $table->id('data_pendaftaran_id'); // primary key auto increment
             $table->unsignedBigInteger('user_id')->index();
-            $table->string('nim', 10)->unique();
             $table->string('nik', 16)->unique();
             $table->string('no_wa', 13)->unique();
             $table->text('alamat_asal');

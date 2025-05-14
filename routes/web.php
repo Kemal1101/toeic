@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'pendaftaran'], function () {
         Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran');
         Route::post('/store_ajax', [PendaftaranController::class, 'store_ajax'])->name('pendaftaran.store_ajax');
+        Route::get('/data_pendaftar', [PendaftaranController::class, 'data_pendaftar'])->name('pendaftaran.data_pendaftar');
+        Route::get('/getPendaftar', [PendaftaranController::class, 'getPendaftar'])->name('pendaftaran.getPendaftar');
     });
 
 });

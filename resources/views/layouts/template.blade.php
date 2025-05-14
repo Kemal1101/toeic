@@ -65,7 +65,7 @@
                     class="user-image rounded-circle shadow"
                     alt="User Image"
                 />
-                <span class="d-none d-md-inline">@yield('name-username', 'Default name')</span>
+                <span class="d-none d-md-inline">{{ Auth::user()->nama_lengkap ?? 'User' }}</span>
                 </a>
             </li>
             <!--end::User Menu-->
@@ -116,6 +116,12 @@
                 <a href="{{ route('pendaftaran') }}" class="nav-link {{ request()->is('pendaftaran') ? 'active' : '' }}">
                   <i class="bi bi-file-earmark-text"></i>
                   <p>Pendaftaran</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('pendaftaran.data_pendaftar') }}" class="nav-link {{ request()->is('pendaftaran/data_pendaftar') ? 'active' : '' }}">
+                  <i class="bi bi-people"></i>
+                  <p>Data Pendaftar</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -271,7 +277,7 @@
             });
         </script>
     @endif
-    
+
     @stack('js')
 
     <!--end::Script-->

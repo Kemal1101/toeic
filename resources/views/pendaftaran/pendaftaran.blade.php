@@ -116,13 +116,7 @@
                     contentType: false,
                     success: function(response) {
                         if(response.status){
-                            $('#myModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-                            dataUser.ajax.reload();
+                            window.location.href = "{{ route('user') }}";
                         }else{
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {
