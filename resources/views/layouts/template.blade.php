@@ -261,6 +261,17 @@
     <!-- Memuat JS untuk Responsiveness -->
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
+    <!-- sweetalert sudah mendaftar -->
+    @if (session('status') == 'anda_sudah_mendaftar')
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Anda sudah mendaftar.',
+            });
+        </script>
+    @endif
+    
     @stack('js')
 
     <!--end::Script-->
