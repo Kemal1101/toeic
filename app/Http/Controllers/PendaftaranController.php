@@ -115,4 +115,73 @@ class PendaftaranController extends Controller
             // ->rawColumns(['aksi']) // jika pakai HTML di kolom
             ->make(true);
     }
+
+    public function verifikasi(String $id)
+    {
+        $dataPendaftar = Data_PendaftaranModel::find($id);
+
+        if (!$dataPendaftar) {
+            abort(404, 'Data pendaftar tidak ditemukan.');
+        }
+
+        $user = UserModel::select('user_id', 'username', 'nama_lengkap')
+                    ->where('user_id', $dataPendaftar->user_id)
+                    ->first();
+
+        return view('pendaftaran.dataPendaftarModal', [
+            'dataPendaftar' => $dataPendaftar,
+            'user' => $user
+        ]);
+    }
+
+    public function notes(String $id)
+    {
+        $dataPendaftar = Data_PendaftaranModel::find($id);
+
+        if (!$dataPendaftar) {
+            return response()->json([
+                'message' => 'Data pendaftar tidak ditemukan.'
+            ], 404);
+        }
+
+        $user = UserModel::select('user_id', 'username', 'nama_lengkap')
+                    ->where('user_id', $dataPendaftar->user_id)
+                    ->first();
+
+        return response()->view('pendaftaran.notesTolakModal', [
+            'dataPendaftar' => $dataPendaftar,
+            'user' => $user
+        ]);
+    }
+
+
+    public function verifikasiSetuju($id)
+    {
+        $data = Data_PendaftaranModel::find($id);
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data pendaftar tidak ditemukan.');
+        }
+
+        $data->verifikasi_data = 'TERVERIFIKASI';
+        $data->save();
+
+        return redirect()->back()->with('success', 'Data berhasil diverifikasi.');
+    }
+
+    public function verifikasiTolak(Request $request, $id)
+    {
+        $data = Data_PendaftaranModel::find($id);
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data pendaftar tidak ditemukan.');
+        }
+
+        $data->verifikasi_data = 'DITOLAK';
+        $data->notes_ditolak = $request->notes_ditolak;
+        $data->save();
+
+        return redirect()->back()->with('error', 'Data berhasil ditolak.');
+    }
+
 }

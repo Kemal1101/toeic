@@ -38,15 +38,8 @@
                     <tr>
                         <th>Nama Lengkap</th>
                         <th>NIM</th>
-                        <th>NIK</th>
-                        <th>Nomor Whatsapp</th>
-                        <th>Alamat Asal</th>
-                        <th>Alamat Sekarang</th>
-                        <th>Jurusan</th>
-                        <th>Program Studi</th>
-                        <th>Kampus</th>
-                        <th>Pas Foto</th>
-                        <th>KTM atau KTP</th>
+                        <th>Status Verifikasi</th>
+                        <th>Verifikasi</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -55,6 +48,23 @@
     </div>
 
 @endsection
+
+<!-- Modal Verifikasi -->
+<div class="modal fade" id="modalVerifikasi" tabindex="-1" aria-labelledby="modalVerifikasiLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalVerifikasiLabel">Detail Pendaftar</h5>
+        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalVerifikasiContent">
+        <!-- Konten dari AJAX akan dimuat di sini -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-container"></div>
 
 @push('js')
 <script>
@@ -75,23 +85,62 @@ $(document).ready(function() {
         columns: [
             { data: 'nama_lengkap', name: 'nama_lengkap' },
             { data: 'username', name: 'username' },
-            { data: 'nik', name: 'nik' },
-            { data: 'no_wa', name: 'no_wa' },
-            { data: 'alamat_asal', name: 'alamat_asal' },
-            { data: 'alamat_sekarang', name: 'alamat_sekarang' },
-            { data: 'jurusan', name: 'jurusan' },
-            { data: 'program_studi', name: 'program_studi' },
-            { data: 'kampus', name: 'kampus' },
-            { data: 'pas_foto', name: 'pas_foto', orderable: false, searchable: false },
-            { data: 'ktm_atau_ktp', name: 'ktm_atau_ktp', orderable: false, searchable: false },
+            {
+                data: 'verifikasi_data',
+                name: 'verifikasi_data',
+                render: function(data, type, row) {
+                    let badgeClass = 'badge rounded-pill p-2 fs-7 fw-normal'; // Ukuran seperti tombol
+                    switch(data) {
+                        case 'PENDING':
+                            badgeClass += ' bg-warning text-dark';
+                            break;
+                        case 'DITOLAK':
+                            badgeClass += ' bg-danger text-white';
+                            break;
+                        case 'TERVERIFIKASI':
+                            badgeClass += ' bg-success text-white';
+                            break;
+                        default:
+                            badgeClass += ' bg-secondary text-white';
+                    }
+                    return `<span class="${badgeClass}">${data}</span>`;
+                }
+            },
+            {
+                data: null,
+                name: 'aksi',
+                render: function(data, type, row) {
+                    let url_verifikasi = `{{ route('pendaftaran.verifikasi', ['id' => ':id']) }}`;
+                    url_verifikasi = url_verifikasi.replace(':id', row.data_pendaftaran_id);
+
+                    let disabled = (row.verifikasi_data === 'DITOLAK' || row.verifikasi_data === 'TERVERIFIKASI')
+                        ? 'disabled'
+                        : '';
+                     return disabled ? `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-secondary" ${disabled}>Verifikasi</button>`
+                     : `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-primary" ${disabled}>Verifikasi</button>`;
+                }
+            }
         ],
-        responsive: true
     });
     $('#filter_tahun').on('change', function() {
         dataPendaftar.ajax.reload();
     });
 
 });
+    function modalAction(url, verifikasi_data) {
+        if(verifikasi_data === 'PENDING') {
+            $('#modalVerifikasi').modal('show');
+            $('#modalVerifikasiContent').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>');
+
+            $.get(url, function(res) {
+                $('#modalVerifikasiContent').html(res);
+            }).fail(function(err) {
+                $('#modalVerifikasiContent').html('<div class="alert alert-danger">Gagal memuat data.</div>');
+            });
+        }
+
+    }
+
 
 </script>
 

@@ -8,6 +8,6 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        return view('layouts.template');
+        return view('welcome');
     }
 }

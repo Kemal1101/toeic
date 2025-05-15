@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('kampus', 100);
             $table->string('pas_foto')->nullable(); // misalnya untuk menyimpan nama file atau path
             $table->string('ktm_atau_ktp')->nullable(); // misalnya untuk menyimpan nama file atau path
+            $table->enum('verifikasi_data', ['PENDING','DITOLAK', 'TERVERIFIKASI'])->default('PENDING');
 
             $table->timestamps();
 

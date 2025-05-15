@@ -1,5 +1,4 @@
 <!doctype html>
-<div></div>
 <html lang="en">
   <!--begin::Head-->
   <head>
@@ -80,7 +79,7 @@
         <!--begin::Sidebar   Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="../index.html" class="brand-link">
+          <a href="{{ route('dashboard') }}" class="brand-link">
             <!--begin::Brand Image-->
             <img
               src="{{ asset('Logo-Polinema.png') }}"
