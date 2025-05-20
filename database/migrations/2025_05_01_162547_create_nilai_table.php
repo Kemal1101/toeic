@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('nilai', function (Blueprint $table) {
             $table->id('nilai_id');
+            $table->unsignedBigInteger('user_id')->index();
             $table->dateTime('tanggal_pelaksanaan'); //format YYYY-MM-DD
             $table->string('nilai_path')->nullable(); // misalnya untuk menyimpan nama file atau path
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('user');
         });
     }
 
