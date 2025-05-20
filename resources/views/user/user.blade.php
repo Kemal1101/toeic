@@ -29,6 +29,7 @@
                         <th>Username</th>
                         <th>Role</th>
                         <th>Tanggal Lahir</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -70,7 +71,20 @@
                 { data: 'nama_lengkap', name: 'nama_lengkap' },
                 { data: 'username', name: 'username' },
                 { data: 'role', name: 'role' },
-                { data: 'tanggal_lahir', name: 'tanggal_lahir' }
+                { data: 'tanggal_lahir', name: 'tanggal_lahir' },
+                {
+                    data: null,
+                    name: 'aksi',
+                    render: function(data, type, row) {
+                        let url_edit = `{{ route('user.edit_ajax', ['id' => ':id']) }}`;
+                        url_edit = url_edit.replace(':id', row.user_id);
+                        let url_hapus = `{{ route('user.confirm_ajax', ['id' => ':id']) }}`;
+                        url_hapus = url_hapus.replace(':id', row.user_id);
+
+                        return `<button onclick="modalAction('${url_edit}')" class="btn btn-sm btn-primary">Edit</button>
+                        <button button onclick="modalAction('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
+                    }
+                }
             ],
             responsive: true
         });

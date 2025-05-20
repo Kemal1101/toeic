@@ -120,4 +120,59 @@ class UserController extends Controller
          }
          return redirect('/');
      }
+
+     public function edit_ajax(String $id){
+        $user = UserModel::find($id);
+        $role = RoleModel::select('role_id', 'role')->get();
+
+        return view('user.edit_ajax', ['user' => $user, 'role' => $role]);
+    }
+
+    public function update_ajax(Request $request, String $id){
+        $user = UserModel::find($id);
+
+        // Validasi manual bisa ditambahkan di sini jika perlu
+
+        $user->update([
+            'nama_lengkap' => $request->input('nama_lengkap'),
+            'username' => $request->input('username'),
+            'role_id' => $request->input('role_id'),
+            'tanggal_lahir' => $request->input('tanggal_lahir'),
+            'password' => $request->input('password') ? Hash::make($request->input('password')) : $user->password,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil diperbarui'
+        ]);
+    }
+
+    public function confirm_ajax(String $id){
+        $user = UserModel::find($id);
+        return view('user.confirm_ajax', ['user' => $user]);
+    }
+
+    public function delete_ajax(String $id){
+        $user = UserModel::find($id);
+        if (\App\Models\Data_PendaftaranModel::where('user_id', $user->user_id)->exists()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Peserta Sudah Mendaftar, Tidak Dapat Dihapus'
+            ]);
+        }
+        $user->delete();
+        if ($user) {
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data berhasil dihapus'
+            ]);
+        }else{
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+        return redirect('/user');
+    }
+
 }

@@ -31,6 +31,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/getUsers', [UserController::class, 'getUsers'])->name('user.getUsers');
         Route::get('/import', [UserController::class, 'import'])->name('user.import');
         Route::post('/import_ajax', [UserController::class, 'import_ajax'])->name('user.import_ajax');
+         //route edit ajax
+        Route::get('/{id}/edit_ajax', [UserController::class, 'edit_ajax'])->name('user.edit_ajax');
+        Route::put('/{id}/update_ajax', [UserController::class, 'update_ajax'])->name('user.update_ajax');
+        //route hapus ajax
+        Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax'])->name('user.confirm_ajax');
+        Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax'])->name('user.delete_ajax');
     });
 
     Route::group(['prefix' => 'pendaftaran'], function () {
@@ -42,6 +48,12 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/confrimverifikasi/{id}', [PendaftaranController::class, 'verifikasiSetuju'])->name('pendaftaran.verifikasi.setuju');
         Route::put('/confrimtolak/{id}', [PendaftaranController::class, 'verifikasiTolak'])->name('pendaftaran.verifikasi.tolak');
         Route::get('/notes/{id}', [PendaftaranController::class, 'notes'])->name('pendaftaran.notes');
+
+        Route::get('/{id}/edit_ajax', [PendaftaranController::class, 'edit_ajax'])->name('pendaftaran.edit_ajax');
+        Route::put('/{id}/update_ajax', [PendaftaranController::class, 'update_ajax'])->name('pendaftaran.update_ajax');
+
+        Route::get('/{id}/delete_ajax', [PendaftaranController::class, 'confirm_ajax'])->name('pendaftaran.confirm_ajax');
+        Route::delete('/{id}/delete_ajax', [PendaftaranController::class, 'delete_ajax'])->name('pendaftaran.delete_ajax');
 
     });
 

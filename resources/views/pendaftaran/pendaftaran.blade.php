@@ -25,7 +25,6 @@
                     <input type="text" name="nik" id="nik" class="form-control" required>
                     <small id="error-nik" class="text-danger"></small>
                 </div>
-
                 <div class="form-group">
                     <label class="col-sm-3 col-form-label">No. WhatsApp</label>
                     <input type="text" name="no_wa" id="no_wa" class="form-control" required>
@@ -109,26 +108,35 @@
                 submitHandler: function(form) {
                     let formData = new FormData(form);
                     $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if(response.status){
-                            window.location.href = "{{ route('user') }}";
-                        }else{
-                            $('.error-text').text('');
-                            $.each(response.msgField, function(prefix, val) {
-                                $('#error-'+prefix).text(val[0]);
+                        url: form.action,
+                        type: form.method,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if(response.status){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil Mendaftar',
+                                    text: response.message
+                                }).then((result) => {
+                                    // Setelah klik OK, redirect ke route user
+                                    if (result.isConfirmed) {
+                                        window.location.href = "{{ route('user') }}";
+                                    }
                                 });
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: response.message
+                            } else {
+                                $('.error-text').text('');
+                                $.each(response.msgField, function(prefix, val) {
+                                    $('#error-'+prefix).text(val[0]);
                                 });
-                        }
-                    }
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Terjadi Kesalahan',
+                                    text: response.message
+                                });
+                            }
+                        },
                 });
                     return false; // Cegah form submit biasa
                 },

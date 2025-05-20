@@ -7,7 +7,6 @@ use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Validator;
 
 class PendaftaranController extends Controller
 {
@@ -86,11 +85,16 @@ class PendaftaranController extends Controller
     {
         $query = Data_PendaftaranModel::with('user'); // eager loading user (username dan nama_lengkap)
 
+        // Filter tahun (dari created_at)
         if ($request->filled('tahun')) {
             $query->whereYear('created_at', $request->tahun);
         }
-        // jika tidak di-filter, biarkan tampil semua data
 
+        // Filter status verifikasi
+        if ($request->filled('verifikasi_data')) {
+            $query->where('verifikasi_data', $request->verifikasi_data);
+        }
+        // jika tidak di-filter, biarkan tampil semua data
 
         return DataTables::of($query)
             ->addColumn('username', function ($pendaftar) {
@@ -183,5 +187,66 @@ class PendaftaranController extends Controller
 
         return redirect()->back()->with('error', 'Data berhasil ditolak.');
     }
+
+    public function confirm_ajax(String $id){
+        $dataPendaftar = Data_PendaftaranModel::find($id);
+        return view('pendaftaran.confirm_ajax', ['dataPendaftar' => $dataPendaftar]);
+    }
+
+    public function delete_ajax(String $id){
+        $dataPendaftar = Data_PendaftaranModel::find($id);
+        if ($dataPendaftar) {
+            $dataPendaftar->delete();
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data berhasil dihapus'
+            ]);
+        }else{
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+        return redirect('/user');
+    }
+
+    public function edit_ajax(String $id){
+        $dataPendaftar = Data_PendaftaranModel::find($id);
+        $user = UserModel::where('user_id', $dataPendaftar->user_id)->first();
+        return view('pendaftaran.edit_ajax', ['dataPendaftar' => $dataPendaftar, 'user' => $user]);
+
+    }
+
+    public function update_ajax(Request $request, String $id)
+    {
+        $dataPendaftar = Data_PendaftaranModel::find($id);
+
+        // Siapkan array data untuk update
+        $updateData = $request->except(['pas_foto', 'ktm_atau_ktp']); // jangan langsung ambil semua
+
+        if ($request->hasFile('pas_foto')) {
+            $foto = $request->file('pas_foto');
+            $foto_nama = 'pasfoto_' . Auth::user()->username . '.' . $foto->getClientOriginalExtension();
+            $foto->move(public_path('uploads/pasfoto'), $foto_nama);
+            $updateData['pas_foto'] =  $foto_nama; // simpan path
+        }
+
+        if ($request->hasFile('ktm_atau_ktp')) {
+            $ktp = $request->file('ktm_atau_ktp');
+            $ktp_nama = 'ktmktp_' . Auth::user()->username . '.' . $ktp->getClientOriginalExtension();
+            $ktp->move(public_path('uploads/ktmktp'), $ktp_nama);
+            $updateData['ktm_atau_ktp'] = $ktp_nama; // simpan path
+        }
+
+        $updateData['verifikasi_data'] = 'PENDING';
+
+        $dataPendaftar->update($updateData);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil diupdate'
+        ]);
+    }
+
 
 }

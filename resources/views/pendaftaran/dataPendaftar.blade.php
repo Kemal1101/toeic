@@ -19,6 +19,19 @@
                 </select>
             </div>
         </div>
+        <div class="col-auto">
+            <div class="input-group input-group-sm">
+                <label class="input-group-text bg-primary text-white" for="filter_verifikasi_data">
+                    <i class="fas fa-calendar-alt me-1"></i> Status Verifikasi
+                </label>
+                <select id="filter_verifikasi_data" class="form-select">
+                    <option value="">Semua Status</option>
+                    @foreach (['PENDING', 'DITOLAK', 'TERVERIFIKASI'] as $verifikasi_data)
+                        <option value="{{ $verifikasi_data }}">{{ $verifikasi_data }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -40,6 +53,7 @@
                         <th>NIM</th>
                         <th>Status Verifikasi</th>
                         <th>Verifikasi</th>
+                        <th>Hapus</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -64,11 +78,29 @@
   </div>
 </div>
 
+<!-- Modal Notes Tolak -->
 <div id="modal-container"></div>
+
+<!-- Modal Delete -->
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog"
+        data-backdrop="static" data-keyboard="false" data-width="75%">
+</div>
 
 @push('js')
 <script>
-    let dataPendaftaran;
+    function modalActionHapusEdit(url) {
+    $.get(url, function(response) {
+        $('#myModal').remove(); // bersihkan modal sebelumnya
+        $('body').append(response); // tambahkan modal baru ke body
+        const modalEl = document.getElementById('myModal');
+        const modalInstance = new bootstrap.Modal(modalEl);
+        modalInstance.show();
+    }).fail(function() {
+        alert('Gagal memuat modal.');
+    });
+}
+
+let dataPendaftaran;
 
 $(document).ready(function() {
         dataPendaftar = $('#table_pendaftar').DataTable({
@@ -79,7 +111,8 @@ $(document).ready(function() {
             url: "{{ route('pendaftaran.getPendaftar') }}",
             type: "GET",
             data: function(d) {
-                d.tahun = $('#filter_tahun').val(); // <-- tambahkan baris ini
+                d.tahun = $('#filter_tahun').val(); // filter tahun
+                d.verifikasi_data = $('#filter_verifikasi_data').val(); // filter status verifikasi
             }
         },
         columns: [
@@ -119,10 +152,21 @@ $(document).ready(function() {
                      return disabled ? `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-secondary" ${disabled}>Verifikasi</button>`
                      : `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-primary" ${disabled}>Verifikasi</button>`;
                 }
-            }
+            },
+            {
+                    data: null,
+                    name: 'hapus',
+                    render: function(data, type, row) {
+                        let url_hapus = `{{ route('pendaftaran.confirm_ajax', ['id' => ':id']) }}`;
+                        url_hapus = url_hapus.replace(':id', row.data_pendaftaran_id);
+
+                        return `<button button onclick="modalActionHapusEdit('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
+                    }
+                }
         ],
     });
-    $('#filter_tahun').on('change', function() {
+    
+    $('#filter_tahun, #filter_verifikasi_data').on('change', function () {
         dataPendaftar.ajax.reload();
     });
 
