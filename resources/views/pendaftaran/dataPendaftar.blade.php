@@ -32,6 +32,14 @@
                 </select>
             </div>
         </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-sm btn-primary mt-1"
+                onclick="modalActionExportPdf('{{ route('data_pendaftar.modal_export_pdf') }}')">
+                Export Pendaftar
+            </button>
+
+
+        </div>
     </div>
 @endsection
 
@@ -86,8 +94,22 @@
         data-backdrop="static" data-keyboard="false" data-width="75%">
 </div>
 
+
 @push('js')
 <script>
+    function modalAction(url, verifikasi_data) {
+        if(verifikasi_data === 'PENDING') {
+            $('#modalVerifikasi').modal('show');
+            $('#modalVerifikasiContent').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>');
+
+            $.get(url, function(res) {
+                $('#modalVerifikasiContent').html(res);
+            }).fail(function(err) {
+                $('#modalVerifikasiContent').html('<div class="alert alert-danger">Gagal memuat data.</div>');
+            });
+        }
+
+    }
     function modalActionHapusEdit(url) {
     $.get(url, function(response) {
         $('#myModal').remove(); // bersihkan modal sebelumnya
@@ -98,7 +120,19 @@
     }).fail(function() {
         alert('Gagal memuat modal.');
     });
-}
+    }
+
+    function modalActionExportPdf(url) {
+    $.get(url, function(response) {
+        $('#myModal').remove(); // bersihkan modal sebelumnya
+        $('body').append(response); // tambahkan modal baru ke body
+        const modalEl = document.getElementById('myModal');
+        const modalInstance = new bootstrap.Modal(modalEl);
+        modalInstance.show();
+    }).fail(function() {
+        alert('Gagal memuat modal.');
+    });
+    }
 
 let dataPendaftaran;
 
@@ -154,36 +188,23 @@ $(document).ready(function() {
                 }
             },
             {
-                    data: null,
-                    name: 'hapus',
-                    render: function(data, type, row) {
-                        let url_hapus = `{{ route('pendaftaran.confirm_ajax', ['id' => ':id']) }}`;
-                        url_hapus = url_hapus.replace(':id', row.data_pendaftaran_id);
+                data: null,
+                name: 'hapus',
+                render: function(data, type, row) {
+                    let url_hapus = `{{ route('pendaftaran.confirm_ajax', ['id' => ':id']) }}`;
+                    url_hapus = url_hapus.replace(':id', row.data_pendaftaran_id);
 
-                        return `<button button onclick="modalActionHapusEdit('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
-                    }
+                    return `<button button onclick="modalActionHapusEdit('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
                 }
+            }
         ],
     });
-    
+
     $('#filter_tahun, #filter_verifikasi_data').on('change', function () {
         dataPendaftar.ajax.reload();
     });
 
 });
-    function modalAction(url, verifikasi_data) {
-        if(verifikasi_data === 'PENDING') {
-            $('#modalVerifikasi').modal('show');
-            $('#modalVerifikasiContent').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>');
-
-            $.get(url, function(res) {
-                $('#modalVerifikasiContent').html(res);
-            }).fail(function(err) {
-                $('#modalVerifikasiContent').html('<div class="alert alert-danger">Gagal memuat data.</div>');
-            });
-        }
-
-    }
 
 
 </script>

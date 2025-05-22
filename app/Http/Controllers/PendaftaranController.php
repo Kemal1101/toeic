@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PendaftaranController extends Controller
 {
@@ -32,10 +33,10 @@ class PendaftaranController extends Controller
         if ($request->ajax() || $request->wantsJson()) {
             // Validasi
             $request->validate([
-                'pas_foto' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-                'ktm_atau_ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                // validasi lain...
+                'pas_foto' => 'required|file|mimes:jpg,jpeg,png|max:5120', // 5 MB = 5120 KB
+                'ktm_atau_ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
             ]);
+
 
             // Simpan file dengan nama baru
             if ($request->hasFile('pas_foto')) {
@@ -66,7 +67,7 @@ class PendaftaranController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Data user berhasil disimpan'
+                'message' => 'Data Pendaftar berhasil disimpan'
             ]);
         }
 
@@ -246,6 +247,36 @@ class PendaftaranController extends Controller
             'status' => true,
             'message' => 'Data berhasil diupdate'
         ]);
+    }
+
+    public function export_modal(){
+        return view('pendaftaran.modal_export_pdf');
+    }
+    public function export_pdf(Request $request)
+    {
+        // Ambil data pendaftar dengan relasi ke user
+        $query = Data_PendaftaranModel::with('user');
+
+        // Filter berdasarkan tahun (dari field created_at)
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->tahun);
+        }
+
+        // Filter berdasarkan status verifikasi
+        if ($request->filled('verifikasi_data')) {
+            $query->where('verifikasi_data', $request->verifikasi_data);
+        }
+
+        // Eksekusi query
+        $data = $query->get();
+
+        // Generate PDF menggunakan view
+        $pdf = Pdf::loadView('pendaftaran.export_pdf', ['data' => $data]);
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption("isRemoteEnabled", true);
+
+        // Tampilkan PDF di browser
+        return $pdf->stream('Data_Pendaftar_' . date('Ymd_His') . '.pdf');
     }
 
 

@@ -55,6 +55,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/delete_ajax', [PendaftaranController::class, 'confirm_ajax'])->name('pendaftaran.confirm_ajax');
         Route::delete('/{id}/delete_ajax', [PendaftaranController::class, 'delete_ajax'])->name('pendaftaran.delete_ajax');
 
+        Route::get('/modal_export_pdf', [PendaftaranController::class, 'export_modal'])->name('data_pendaftar.modal_export_pdf');
+        Route::get('/export_pdf', [PendaftaranController::class, 'export_pdf'])->name('data_pendaftar.export_pdf');
+
     });
 
 });

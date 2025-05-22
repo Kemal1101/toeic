@@ -9,6 +9,11 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
+                    <label>Download Contoh File</label>
+                    <a href="{{ asset('template/data_user_template.xlsx') }}" class="btn btn-info btn-sm" download><i class="fa fa-file-excel"></i>Download</a>
+                    <small id="error-kategori_id" class="error-text form-text text-danger"></small>
+                </div>
+            <div class="form-group">
               <label for="data_user">Pilih File</label>
               <input type="file" name="data_user" id="data_user" class="form-control" required>
               <small id="error-data_user" class="error-text text-danger"></small>
