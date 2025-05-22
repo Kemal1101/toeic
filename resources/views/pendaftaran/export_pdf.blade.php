@@ -68,7 +68,10 @@
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA PENDAFTAR TOEIC</h4>
+    <h3 class="text-center">
+        LAPORAN DATA PENDAFTAR TOEIC {{ optional($data[0]->created_at)->format('Y') }} {{ $data[0]->verifikasi_data }}
+    </h3>
+
     <table class="border-all">
         <thead>
             <tr>
