@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\JadwalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,5 +61,12 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
+     Route::group(['prefix' => 'jadwal'], function () {
+        Route::get('/', [JadwalController::class, 'index'])->name('jadwal');
+        Route::get('/getJadwal', [JadwalController::class, 'getJadwal'])->name('jadwal.getJadwal');
+        
+        Route::get('/import', [JadwalController::class, 'import'])->name('jadwal.import');
+        Route::post('/import_ajax', [JadwalController::class, 'import_ajax'])->name('jadwal.import_ajax');
+    });
 });
 

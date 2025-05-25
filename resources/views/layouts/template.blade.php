@@ -124,6 +124,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('jadwal') }}" class="nav-link {{ request()->is('jadwal') ? 'active' : '' }}">
+                  <i class="bi bi-calendar"></i>
+                  <p>Jadwal Peserta</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ url('/logout') }}" class="nav-link {{ request()->is('logout') ? 'active' : '' }}">
                   <i class="bi bi-box-arrow-right"></i>
                   <p>Logout</p>

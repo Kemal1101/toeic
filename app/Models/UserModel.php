@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\RoleModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Data_PendaftaranModel;
+use App\Models\JadwalModel;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
 class UserModel extends Authenticable
@@ -29,6 +30,10 @@ class UserModel extends Authenticable
     public function data_pendaftaran(): HasMany
     {
         return $this->hasMany(Data_PendaftaranModel::class, 'user_id', 'user_id');
+    }
+    public function jadwal(): HasMany
+    {
+        return $this->hasMany(JadwalModel::class, 'user_id', 'user_id');
     }
 
 }
