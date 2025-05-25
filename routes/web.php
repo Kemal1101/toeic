@@ -38,6 +38,9 @@ Route::middleware(['auth'])->group(function () {
         //route hapus ajax
         Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax'])->name('user.confirm_ajax');
         Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax'])->name('user.delete_ajax');
+
+        Route::get('/create_ajax', [UserController::class, 'create_ajax'])->name('user.create_ajax');
+        Route::post('/store_ajax', [UserController::class, 'store_ajax'])->name('user.store_ajax');
     });
 
     Route::group(['prefix' => 'pendaftaran'], function () {
@@ -64,9 +67,16 @@ Route::middleware(['auth'])->group(function () {
      Route::group(['prefix' => 'jadwal'], function () {
         Route::get('/', [JadwalController::class, 'index'])->name('jadwal');
         Route::get('/getJadwal', [JadwalController::class, 'getJadwal'])->name('jadwal.getJadwal');
-        
+        Route::get('/getJadwalPelaksanaan', [JadwalController::class, 'getJadwalPelaksanaan'])->name('jadwal.getJadwalPelaksanaan');
+
         Route::get('/import', [JadwalController::class, 'import'])->name('jadwal.import');
         Route::post('/import_ajax', [JadwalController::class, 'import_ajax'])->name('jadwal.import_ajax');
+
+        Route::get('/create_ajax', [JadwalController::class, 'create_ajax'])->name('jadwal.create_ajax');
+        Route::post('/store_ajax', [JadwalController::class, 'store_ajax'])->name('jadwal.store_ajax');
+
+        Route::get('/{id}/delete_ajax', [JadwalController::class, 'confirm_ajax'])->name('jadwal.confirm_ajax');
+        Route::delete('/{id}/delete_ajax', [JadwalController::class, 'delete_ajax'])->name('jadwal.delete_ajax');
     });
 });
 

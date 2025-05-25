@@ -10,6 +10,9 @@
                 <button onclick="modalAction('{{ route('user.import') }}')" class="btn btn-sm btn-info mt-1">
                     Import User
                 </button>
+                <button onclick="modalAction('{{ route('user.create_ajax') }}')" class="btn btn-sm btn-success mt-1">
+                    Tambah User
+                </button>
             </div>
         </div>
 

@@ -175,4 +175,35 @@ class UserController extends Controller
         return redirect('/user');
     }
 
+    public function create_ajax(){
+        $role = RoleModel::select('role_id', 'role')->get();
+        return view('user.create_ajax', ['role' => $role]);
+    }
+
+    public function store_ajax(Request $request){
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'username' => 'required|string|max:100|unique:user,username',
+            'role_id' => 'required|integer',
+            'tanggal_lahir' => 'required|date',
+            'password' => 'required|string|min:6'
+        ]);
+
+        $user = new UserModel();
+        $user->nama_lengkap = $request->input('nama_lengkap');
+        $user->username = $request->input('username');
+        $user->role_id = $request->input('role_id');
+        $user->tanggal_lahir = $request->input('tanggal_lahir');
+        $user->password = Hash::make($request->input('password'));
+        $user->created_at = now();
+        $user->updated_at = now();
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil disimpan'
+        ]);
+    }
+
+
 }

@@ -10,6 +10,9 @@
                 <button onclick="modalAction('{{ route('jadwal.import') }}')" class="btn btn-sm btn-info mt-1">
                     Import Jadwal Peserta
                 </button>
+                <button onclick="modalAction('{{ route('jadwal.create_ajax') }}')" class="btn btn-sm btn-success mt-1">
+                    Tambah Jadwal Peserta
+                </button>
             </div>
         </div>
 
@@ -78,8 +81,8 @@
                     render: function(data, type, row) {
                         let url_edit = `{{ route('user.edit_ajax', ['id' => ':id']) }}`;
                         url_edit = url_edit.replace(':id', row.user_id);
-                        let url_hapus = `{{ route('user.confirm_ajax', ['id' => ':id']) }}`;
-                        url_hapus = url_hapus.replace(':id', row.user_id);
+                        let url_hapus = `{{ route('jadwal.confirm_ajax', ['id' => ':id']) }}`;
+                        url_hapus = url_hapus.replace(':id', row.tanggal_pelaksanaan_id);
 
                         return `<button onclick="modalAction('${url_edit}')" class="btn btn-sm btn-primary">Edit</button>
                                 <button onclick="modalAction('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
