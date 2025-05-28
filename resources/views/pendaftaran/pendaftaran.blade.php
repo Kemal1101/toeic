@@ -57,7 +57,6 @@
                     <label class="col-sm-3 col-form-label">Jurusan:</label>
                     <select name="jurusan" id="jurusan" class="form-control" required disabled>
                     <select name="jurusan" id="jurusan" class="form-control" required disabled>
-                        <option value="">- Pilih Jurusan -</option>
                     </select>
                     <small id="error-jurusan" class="text-danger"></small>
                 </div>
@@ -66,7 +65,6 @@
                     <label class="col-sm-3 col-form-label">Program Studi:</label>
                     <select name="program_studi" id="program_studi" class="form-control" required disabled>
                     <select name="program_studi" id="program_studi" class="form-control" required disabled>
-                        <option value="">- Pilih Program Studi -</option>
                     </select>
                     <small id="error-program_studi" class="text-danger"></small>
                 </div>
@@ -104,7 +102,7 @@
 
 @push('js')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -114,7 +112,6 @@
 
             const maxSize = 5 * 1024 * 1024; // 5MB
 
-            // Data untuk jurusan berdasarkan kampus
             const jurusanData = {
                 "Kampus Utama": [
                     "Teknik Sipil", "Teknik Kimia", "Teknik Elektro",
@@ -132,7 +129,6 @@
                 ]
             };
 
-            // Data untuk program studi berdasarkan jurusan
             const programStudiData = {
                 "Teknik Sipil": ["Manajemen Konstruksi", "Struktur Bangunan", "Geoteknik"],
                 "Teknik Kimia": ["Teknik Kimia Industri", "Rekayasa Proses"],
@@ -143,39 +139,31 @@
                 "Administrasi Niaga": ["Administrasi Bisnis", "Manajemen Pemasaran"]
             };
 
-            // Event ketika kampus dipilih
-            $('#kampus').change(function() {
+            $('#kampus').change(function () {
                 const selectedKampus = $(this).val();
                 const $jurusan = $('#jurusan');
                 const $jurusanContainer = $('#jurusan-container');
                 const $prodiContainer = $('#prodi-container');
 
-                // Reset jurusan dan program studi
                 $jurusan.empty().append('<option value="">- Pilih Jurusan -</option>');
                 $('#program_studi').empty().append('<option value="">- Pilih Program Studi -</option>');
 
-                // Sembunyikan program studi
                 $prodiContainer.hide();
                 $('#program_studi').prop('disabled', true);
 
                 if (selectedKampus && jurusanData[selectedKampus]) {
-                    // Tampilkan jurusan
                     $jurusanContainer.show();
                     $jurusan.prop('disabled', false);
-
-                    // Isi dropdown jurusan
-                    jurusanData[selectedKampus].forEach(function(jurusan) {
+                    jurusanData[selectedKampus].forEach(jurusan => {
                         $jurusan.append(`<option value="${jurusan}">${jurusan}</option>`);
                     });
                 } else {
-                    // Sembunyikan jurusan jika kampus tidak dipilih
                     $jurusanContainer.hide();
                     $jurusan.prop('disabled', true);
                 }
             });
 
-            // Event ketika jurusan dipilih
-            $('#jurusan').change(function() {
+            $('#jurusan').change(function () {
                 const selectedJurusan = $(this).val();
                 const $programStudi = $('#program_studi');
                 const $prodiContainer = $('#prodi-container');
@@ -183,87 +171,68 @@
                 $programStudi.empty().append('<option value="">- Pilih Program Studi -</option>');
 
                 if (selectedJurusan && programStudiData[selectedJurusan]) {
-                    // Tampilkan program studi
                     $prodiContainer.show();
                     $programStudi.prop('disabled', false);
-
-                    // Isi dropdown program studi
-                    programStudiData[selectedJurusan].forEach(function(prodi) {
+                    programStudiData[selectedJurusan].forEach(prodi => {
                         $programStudi.append(`<option value="${prodi}">${prodi}</option>`);
                     });
                 } else {
-                    // Sembunyikan program studi jika jurusan tidak dipilih
                     $prodiContainer.hide();
                     $programStudi.prop('disabled', true);
                 }
             });
 
-            // Validasi file upload
-            $('#pas_foto').on('change', function() {
-                const file = this.files[0];
+            function validateFileInput(inputId, errorId) {
+                const fileInput = document.getElementById(inputId);
+                const errorElement = document.getElementById(errorId);
+                const file = fileInput.files[0];
                 const allowedTypes = ['image/jpeg', 'image/png'];
 
                 if (file) {
                     if (!allowedTypes.includes(file.type)) {
-                        $('#error-pas_foto').text('Format file tidak valid. Hanya JPG dan PNG yang diperbolehkan.');
-                        $(this).val('');
+                        errorElement.textContent = 'Format file tidak valid. Hanya JPG dan PNG yang diperbolehkan.';
+                        fileInput.value = '';
                         return;
                     }
 
                     if (file.size > maxSize) {
-                        $('#error-pas_foto').text('Ukuran file pas foto melebihi 5 MB. Silakan pilih file yang lebih kecil.');
-                        $(this).val('');
+                        errorElement.textContent = 'Ukuran file melebihi 5 MB. Silakan pilih file yang lebih kecil.';
+                        fileInput.value = '';
                     } else {
-                        $('#error-pas_foto').text('');
+                        errorElement.textContent = '';
                     }
                 }
-            });
+            }
 
-            $('#ktm_atau_ktp').on('change', function() {
-            $('#ktm_atau_ktp').on('change', function() {
-                const file = this.files[0];
-                const allowedTypes = ['image/jpeg', 'image/png'];
+            $('#pas_foto').on('change', () => validateFileInput('pas_foto', 'error-pas_foto'));
+            $('#ktm_atau_ktp').on('change', () => validateFileInput('ktm_atau_ktp', 'error-ktm_atau_ktp'));
 
-                if (file) {
-                    if (!allowedTypes.includes(file.type)) {
-                        $('#error-ktm_atau_ktp').text('Format file tidak valid. Hanya JPG, PNG yang diperbolehkan.');
-                        $(this).val('');
-                        return;
-                    }
+            $('#form-tambah').validate({
+                submitHandler: function (form) {
+                    const formData = new FormData(form);
 
-                    if (file.size > maxSize) {
-                        $('#error-ktm_atau_ktp').text('Ukuran file KTM/KTP melebihi 5 MB. Silakan pilih file yang lebih kecil.');
-                        $(this).val('');
-                    } else {
-                        $('#error-ktm_atau_ktp').text('');
-                    }
-                }
-            });
-
-            $("#form-tambah").validate({
-                submitHandler: function(form) {
-                    let formData = new FormData(form);
                     $.ajax({
                         url: form.action,
                         type: form.method,
                         data: formData,
                         processData: false,
                         contentType: false,
-                        success: function(response) {
-                            if(response.status){
+                        success: function (response) {
+                            $('.error-text').text('');
+
+                            if (response.status) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil Mendaftar',
                                     text: response.message
-                                }).then((result) => {
+                                }).then(result => {
                                     if (result.isConfirmed) {
                                         window.location.href = "{{ route('user') }}";
                                     }
                                 });
                             } else {
-                                $('.error-text').text('');
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-'+prefix).text(val[0]);
+                                $.each(response.msgField, function (prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
                                 });
                                 Swal.fire({
                                     icon: 'error',
@@ -271,28 +240,25 @@
                                     text: response.message
                                 });
                             }
-                        },
+                        }
                     });
-                    return false;
-                    });
+
                     return false;
                 },
                 errorElement: 'span',
-                errorPlacement: function(error, element) {
-                errorPlacement: function(error, element) {
+                errorPlacement: function (error, element) {
                     error.addClass('invalid-feedback');
                     element.closest('.form-group').append(error);
                 },
-                highlight: function(element, errorClass, validClass) {
-                highlight: function(element, errorClass, validClass) {
+                highlight: function (element) {
                     $(element).addClass('is-invalid');
                 },
-                unhighlight: function(element, errorClass, validClass) {
-                unhighlight: function(element, errorClass, validClass) {
+                unhighlight: function (element) {
                     $(element).removeClass('is-invalid');
                 }
             });
         });
     </script>
+
 
 @endpush

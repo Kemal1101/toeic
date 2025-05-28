@@ -17,25 +17,43 @@ class AuthController extends Controller
 
     public function postlogin(Request $request)
     {
-        if($request->ajax() || $request->wantsJson()){
+        if ($request->ajax() || $request->wantsJson()) {
             $credentials = $request->only('username', 'password');
 
             if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+                $roleId = $user->role_id;
+
+                // Tentukan URL redirect berdasarkan role_id
+                switch ($roleId) {
+                    case 1:
+                        $redirectUrl = route('dashboard.upa');
+                        break;
+                    case 2:
+                        $redirectUrl = route('dashboard.mahasiswa');
+                        break;
+                    default:
+                        $redirectUrl = route('login'); // fallback
+                        break;
+                }
+
                 return response()->json([
                     'status' => true,
-                    'message' => 'Login Berhasil',
-                    'redirect' => url('/')
+                    'message' => 'Login berhasil',
+                    'redirect' => $redirectUrl
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Username atau password salah'
                 ]);
             }
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Login Gagal'
-            ]);
         }
 
-        return redirect('login');
+        // Jika bukan AJAX, kembalikan ke login biasa
+        return redirect()->route('login');
     }
+
 
     public function logout(Request $request)
     {

@@ -79,7 +79,7 @@
         <!--begin::Sidebar   Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="{{ route('dashboard') }}" class="brand-link">
+          <a href="" class="brand-link">
             <!--begin::Brand Image-->
             <img
               src="{{ asset('Logo-Polinema.png') }}"
@@ -105,13 +105,13 @@
               role="menu"
               data-accordion="false"
             >
+            @if (auth()->user()->role_id == 1)
             <li class="nav-item">
-                <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.upa') }}" class="nav-link {{ request()->is('/dashboard/upa') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-person"></i>
                   <p>Dashboard</p>
                 </a>
               </li>
-            @if (auth()->user()->role_id == 1)
             <li class="nav-item">
                 <a href="{{ route('user') }}" class="nav-link {{ request()->is('user') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-person"></i>
@@ -132,6 +132,12 @@
               </li>
             @endif
             @if (auth()->user()->role_id == 2)
+            <li class="nav-item">
+                <a href="{{ route('dashboard.mahasiswa') }}" class="nav-link {{ request()->is('/dashboard/mahasiswa') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-person"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
               <li class="nav-item">
                 <a href="{{ route('pendaftaran') }}" class="nav-link {{ request()->is('pendaftaran') ? 'active' : '' }}">
                   <i class="bi bi-file-earmark-text"></i>

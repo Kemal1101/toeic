@@ -25,7 +25,8 @@ Route::post('login', [AuthController::class, 'postlogin' ]);
 Route::get('logout', [AuthController ::class,'logout' ])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [WelcomeController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/mahasiswa', [WelcomeController::class, 'indexMahasiswa'])->name('dashboard.mahasiswa');
+    Route::get('/dashboard/upa', [WelcomeController::class, 'indexUpa'])->name('dashboard.upa');
 
     Route::group(['prefix' => 'user'], function () {
         Route::get('/', [UserController::class, 'index'])->name('user');
