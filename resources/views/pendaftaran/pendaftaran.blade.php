@@ -43,7 +43,7 @@
                     <small id="error-alamat_sekarang" class="text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 col-form-label">Kampus</label>
+                    <label class="col-sm-3 col-form-label">Kampus:</label>
                     <select name="kampus" id="kampus" class="form-control" required>
                         <option value="">- Pilih Kampus -</option>
                         <option value="Kampus Utama">Kampus Utama</option>
@@ -54,7 +54,7 @@
                     <small id="error-kampus" class="text-danger"></small>
                 </div>
                <div id="jurusan-container" class="form-group" style="display: none;">
-                    <label class="col-sm-3 col-form-label">Jurusan</label>
+                    <label class="col-sm-3 col-form-label">Jurusan:</label>
                     <select name="jurusan" id="jurusan" class="form-control" required disabled>
                     <select name="jurusan" id="jurusan" class="form-control" required disabled>
                         <option value="">- Pilih Jurusan -</option>
@@ -63,7 +63,7 @@
                 </div>
 
                 <div id="prodi-container" class="form-group" style="display: none;">
-                    <label class="col-sm-3 col-form-label">Program Studi</label>
+                    <label class="col-sm-3 col-form-label">Program Studi:</label>
                     <select name="program_studi" id="program_studi" class="form-control" required disabled>
                     <select name="program_studi" id="program_studi" class="form-control" required disabled>
                         <option value="">- Pilih Program Studi -</option>
@@ -76,7 +76,7 @@
                     </label>
                     <div class="custom-file">
                         <input type="file" name="pas_foto" id="pas_foto" class="custom-file-input" accept="image/jpeg,image/png" required>
-                        <label class="custom-file-label" for="pas_foto">Pilih file foto</label>
+                        <label class="custom-file-label" for="pas_foto">Pilih file foto </label>
                     </div>
                     <small id="error-pas_foto" class="form-text text-danger"></small>
                 </div>
