@@ -106,15 +106,16 @@
               data-accordion="false"
             >
             <li class="nav-item">
+                <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-person"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+            @if (auth()->user()->role_id == 1)
+            <li class="nav-item">
                 <a href="{{ route('user') }}" class="nav-link {{ request()->is('user') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-person"></i>
                   <p>User</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('pendaftaran') }}" class="nav-link {{ request()->is('pendaftaran') ? 'active' : '' }}">
-                  <i class="bi bi-file-earmark-text"></i>
-                  <p>Pendaftaran</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -129,12 +130,21 @@
                   <p>Jadwal Peserta</p>
                 </a>
               </li>
+            @endif
+            @if (auth()->user()->role_id == 2)
+              <li class="nav-item">
+                <a href="{{ route('pendaftaran') }}" class="nav-link {{ request()->is('pendaftaran') ? 'active' : '' }}">
+                  <i class="bi bi-file-earmark-text"></i>
+                  <p>Pendaftaran</p>
+                </a>
+              </li>
               <li class="nav-item">
                 <a href="{{ route('jadwal.getJadwalPelaksanaan') }}" class="nav-link {{ request()->is('jadwal/getJadwalPelaksanaan') ? 'active' : '' }}">
                   <i class="bi bi-calendar"></i>
                   <p>Jadwal Pelaksanaan</p>
                 </a>
               </li>
+            @endif
               <li class="nav-item">
                 <a href="{{ url('/logout') }}" class="nav-link {{ request()->is('logout') ? 'active' : '' }}">
                   <i class="bi bi-box-arrow-right"></i>
