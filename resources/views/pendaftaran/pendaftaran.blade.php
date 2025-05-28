@@ -56,6 +56,7 @@
                <div id="jurusan-container" class="form-group" style="display: none;">
                     <label class="col-sm-3 col-form-label">Jurusan</label>
                     <select name="jurusan" id="jurusan" class="form-control" required disabled>
+                    <select name="jurusan" id="jurusan" class="form-control" required disabled>
                         <option value="">- Pilih Jurusan -</option>
                     </select>
                     <small id="error-jurusan" class="text-danger"></small>
@@ -63,6 +64,7 @@
 
                 <div id="prodi-container" class="form-group" style="display: none;">
                     <label class="col-sm-3 col-form-label">Program Studi</label>
+                    <select name="program_studi" id="program_studi" class="form-control" required disabled>
                     <select name="program_studi" id="program_studi" class="form-control" required disabled>
                         <option value="">- Pilih Program Studi -</option>
                     </select>
@@ -89,7 +91,6 @@
                     </div>
                     <small id="error-ktm_atau_ktp" class="form-text text-danger"></small>
                 </div>
-
 
                 <div class="form-group text-right mt-4">
                     <button type="submit" class="btn btn-success">
@@ -219,6 +220,7 @@
             });
 
             $('#ktm_atau_ktp').on('change', function() {
+            $('#ktm_atau_ktp').on('change', function() {
                 const file = this.files[0];
                 const allowedTypes = ['image/jpeg', 'image/png'];
 
@@ -272,15 +274,20 @@
                         },
                     });
                     return false;
+                    });
+                    return false;
                 },
                 errorElement: 'span',
+                errorPlacement: function(error, element) {
                 errorPlacement: function(error, element) {
                     error.addClass('invalid-feedback');
                     element.closest('.form-group').append(error);
                 },
                 highlight: function(element, errorClass, validClass) {
+                highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');
                 },
+                unhighlight: function(element, errorClass, validClass) {
                 unhighlight: function(element, errorClass, validClass) {
                     $(element).removeClass('is-invalid');
                 }
