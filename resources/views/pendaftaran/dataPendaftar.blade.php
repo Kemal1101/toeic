@@ -32,14 +32,6 @@
                 </select>
             </div>
         </div>
-        <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-primary mt-1"
-                onclick="modalActionExportPdf('{{ route('data_pendaftar.modal_export_pdf') }}')">
-                Export Pendaftar
-            </button>
-
-
-        </div>
     </div>
 @endsection
 
@@ -68,6 +60,13 @@
             </table>
         </div>
     </div>
+
+    <div class="d-flex justify-content-end mt-3 mb-1">
+    <button type="button" class="btn btn-sm btn-primary"
+        onclick="modalActionExportPdf('{{ route('data_pendaftar.modal_export_pdf') }}')">
+        Export Pendaftar
+    </button>
+</div>
 
 @endsection
 

@@ -15,10 +15,10 @@ class WelcomeController extends Controller
         $user = Auth::user();
 
         // Ambil data pendaftaran milik user yang login
-        $Data_PendaftaranModel = Data_PendaftaranModel::where('user_id', $user_id)->first();
+        $dataPendaftaran = Data_PendaftaranModel::where('user_id', $user_id)->first();
 
         // Kirim ke view
-        return view('dashboardMahasiswa', compact('Data_PendaftaranModel', 'user'));
+        return view('dashboardMahasiswa', compact('dataPendaftaran', 'user'));
     }
 
     public function indexUpa(){

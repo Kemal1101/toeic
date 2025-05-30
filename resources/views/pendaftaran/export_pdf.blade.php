@@ -1,4 +1,5 @@
 <html>
+    <title>Data Pendaftar TOEIC</title>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
@@ -51,6 +52,27 @@
         .border-all, .border-all th, .border-all td{
             border: 1px solid;
         }
+        @media print {
+            table, tr, td, th {
+                page-break-inside: avoid;
+            }
+            tr {
+                page-break-after: auto;
+            }
+            thead {
+                display: table-header-group;
+            }
+            tfoot {
+                display: table-footer-group;
+            }
+        }
+        .scrollable-table {
+            max-height: 600px;
+            overflow-y: auto;
+            display: block;
+        }
+
+
     </style>
 </head>
 <body>
@@ -71,24 +93,59 @@
     <h3 class="text-center">
         LAPORAN DATA PENDAFTAR TOEIC {{ optional($data[0]->created_at)->format('Y') }} {{ $data[0]->verifikasi_data }}
     </h3>
-
-    <table class="border-all">
-        <thead>
+    @foreach($data as $b)
+    <div style="margin-bottom: 30px;">
+        <table class="border-all" style="margin-bottom: 20px;">
             <tr>
-                <th class="text-center">No</th>
-                <th>Nama Lengkap</th>
-                <th>NIM</th>
+                <th class="text-left" width="30%">No</th>
+                <td>{{ $loop->iteration }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach($data as $b)
             <tr>
-                <td class="text-center">{{ $loop->iteration }}</td>
+                <th>Nama Lengkap</th>
                 <td>{{ $b->user->nama_lengkap }}</td>
+            </tr>
+            <tr>
+                <th>NIM</th>
                 <td>{{ $b->user->username }}</td>
             </tr>
-            @endforeach
-        </tbody>
-    </table>
+            <tr>
+                <th>NIK</th>
+                <td>{{ $b->nik }}</td>
+            </tr>
+            <tr>
+                <th>Nomor Whatsapp</th>
+                <td>{{ $b->no_wa }}</td>
+            </tr>
+            <tr>
+                <th>Alamat Asal</th>
+                <td>{{ $b->alamat_asal }}</td>
+            </tr>
+            <tr>
+                <th>Alamat Sekarang</th>
+                <td>{{ $b->alamat_sekarang }}</td>
+            </tr>
+            <tr>
+                <th>Kampus</th>
+                <td>{{ $b->kampus }}</td>
+            </tr>
+            <tr>
+                <th>Jurusan</th>
+                <td>{{ $b->jurusan }}</td>
+            </tr>
+            <tr>
+                <th>Program Studi</th>
+                <td>{{ $b->program_studi }}</td>
+            </tr>
+            <tr>
+                <th>Pas Foto</th>
+                <td><img src="{{ asset('uploads/pasfoto/' . $b->pas_foto) }}" alt="Pas Foto" width="100"></td>
+            </tr>
+            <tr>
+                <th>KTM/KTP</th>
+                <td><img src="{{ asset('uploads/ktmktp/' . $b->ktm_atau_ktp) }}" alt="KTM/KTP" width="100"></td>
+            </tr>
+        </table>
+    </div>
+    @endforeach
 </body>
 </html>
