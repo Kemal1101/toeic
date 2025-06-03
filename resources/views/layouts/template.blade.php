@@ -316,6 +316,16 @@
             });
         </script>
     @endif
+    @if (session('status') == 'pendaftaran_tidak_dibuka');
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Pendaftaran Ditutup.',
+            });
+        </script>
+    @endif
+
 
     @stack('js')
 

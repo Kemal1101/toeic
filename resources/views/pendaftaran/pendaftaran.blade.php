@@ -102,163 +102,185 @@
 
 @push('js')
     <script>
-        $(document).ready(function () {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    'Accept': 'application/json'
-                }
-            });
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Accept': 'application/json'
+            }
+        });
 
-            const maxSize = 5 * 1024 * 1024; // 5MB
+        const maxSize = 5 * 1024 * 1024; // 5MB
 
-            const jurusanData = {
-                "Kampus Utama": [
-                    "Teknik Sipil", "Teknik Kimia", "Teknik Elektro",
-                    "Teknik Mesin", "Teknologi Informasi", "Akutansi",
-                    "Administrasi Niaga"
+        const dataStruktur = {
+            "Kampus Utama": {
+                "Teknik Elektro": [
+                    "D-IV Teknik Elektronika", "D-IV Sistem Kelistrikan", "D-IV Jaringan Telekomunikasi Digital",
+                    "D-III Teknik Elektronika", "D-III Teknik Listrik", "D-III Teknik Telekomunikasi"
                 ],
-                "PSDKU Kediri": [
-                    "Teknologi Informasi", "Akutansi", "Administrasi Niaga"
+                "Teknik Mesin": [
+                    "D-IV Teknik Otomotif Elektronik", "D-IV Teknik Mesin Produksi dan Perawatan",
+                    "D-III Teknik Mesin", "D-III Teknologi Pemeliharaan Pesawat Udara"
                 ],
-                "PSDKU Lumajang": [
-                    "Teknik Sipil", "Teknik Mesin"
+                "Teknik Sipil": [
+                    "D-IV Manajemen Rekayasa Konstruksi", "D-IV Teknologi Rekayasa Konstruksi Jalan dan Jembatan",
+                    "D-III Teknik Sipil", "D-III Teknologi Konstruksi Jalan, Jembatan, dan Bangunan Air",
+                    "D-III Teknologi Pertambangan"
                 ],
-                "PSDKU Pamekasan": [
-                    "Teknik Elektro", "Administrasi Niaga"
+                "Akuntansi": [
+                    "D-IV Akuntansi Manajemen", "D-IV Keuangan", "D-III Akuntansi"
+                ],
+                "Administrasi Niaga": [
+                    "D-IV Manajemen Pemasaran", "D-IV Bahasa Inggris untuk Komunikasi Bisnis dan Profesional",
+                    "D-IV Pengelolaan Arsip dan Rekaman Informasi", "D-IV Usaha Perjalanan Wisata",
+                    "D-IV Bahasa Inggris Untuk Industri Pariwisata", "D-III Administrasi Bisnis"
+                ],
+                "Teknik Kimia": [
+                    "D-IV Teknologi Kimia Industri", "D-III Teknik Kimia"
+                ],
+                "Teknologi Informasi": [
+                    "D-IV Teknik Informatika", "D-IV Sistem Informasi Bisnis", "D-II Pengembangan Piranti Lunak Situs"
                 ]
-            };
+            },
+            "PSDKU Kediri": {
+                "Teknik Elektro": ["D-IV Teknik Elektronika"],
+                "Teknik Mesin": ["D-IV Teknik Mesin Produksi dan Perawatan", "D-III Teknik Mesin"],
+                "Akuntansi": ["D-IV Keuangan", "D-III Akuntansi"],
+                "Teknologi Informasi": ["D-III Manajemen Informatika"]
+            },
+            "PSDKU Lumajang": {
+                "Teknik Mesin": ["D-IV Teknologi Rekayasa Otomotif"],
+                "Teknologi Informasi": ["D-III Teknologi Informasi"],
+                "Teknik Sipil": ["D-III Teknik Sipil"],
+                "Akuntansi": ["D-III Akuntansi"]
+            },
+            "PSDKU Pamekasan": {
+                "Teknik Elektro": ["D-IV Teknik Otomotif Elektronik"],
+                "Akuntansi": ["D-IV Akuntansi Manajemen"],
+                "Teknologi Informasi": ["D-III Manajemen Informatika"]
+            }
+        };
 
-            const programStudiData = {
-                "Teknik Sipil": ["Manajemen Konstruksi", "Struktur Bangunan", "Geoteknik"],
-                "Teknik Kimia": ["Teknik Kimia Industri", "Rekayasa Proses"],
-                "Teknik Elektro": ["Elektronika", "Telekomunikasi", "Tenaga Listrik"],
-                "Teknik Mesin": ["Desain Mesin", "Konversi Energi"],
-                "Teknologi Informasi": ["Sistem Informasi", "Teknologi Komputer", "Rekayasa Perangkat Lunak"],
-                "Akutansi": ["Akuntansi Keuangan", "Akuntansi Manajemen"],
-                "Administrasi Niaga": ["Administrasi Bisnis", "Manajemen Pemasaran"]
-            };
+        $('#kampus').change(function () {
+            const selectedKampus = $(this).val();
+            const $jurusan = $('#jurusan');
+            const $programStudi = $('#program_studi');
 
-            $('#kampus').change(function () {
-                const selectedKampus = $(this).val();
-                const $jurusan = $('#jurusan');
-                const $jurusanContainer = $('#jurusan-container');
-                const $prodiContainer = $('#prodi-container');
+            $jurusan.empty().append('<option value="">- Pilih Jurusan -</option>');
+            $programStudi.empty().append('<option value="">- Pilih Program Studi -</option>');
 
-                $jurusan.empty().append('<option value="">- Pilih Jurusan -</option>');
-                $('#program_studi').empty().append('<option value="">- Pilih Program Studi -</option>');
+            $('#prodi-container').hide();
+            $programStudi.prop('disabled', true);
 
-                $prodiContainer.hide();
-                $('#program_studi').prop('disabled', true);
+            if (selectedKampus && dataStruktur[selectedKampus]) {
+                $('#jurusan-container').show();
+                $jurusan.prop('disabled', false);
+                Object.keys(dataStruktur[selectedKampus]).forEach(jurusan => {
+                    $jurusan.append(`<option value="${jurusan}">${jurusan}</option>`);
+                });
+            } else {
+                $('#jurusan-container').hide();
+                $jurusan.prop('disabled', true);
+            }
+        });
 
-                if (selectedKampus && jurusanData[selectedKampus]) {
-                    $jurusanContainer.show();
-                    $jurusan.prop('disabled', false);
-                    jurusanData[selectedKampus].forEach(jurusan => {
-                        $jurusan.append(`<option value="${jurusan}">${jurusan}</option>`);
-                    });
-                } else {
-                    $jurusanContainer.hide();
-                    $jurusan.prop('disabled', true);
+        $('#jurusan').change(function () {
+            const selectedKampus = $('#kampus').val();
+            const selectedJurusan = $(this).val();
+            const $programStudi = $('#program_studi');
+
+            $programStudi.empty().append('<option value="">- Pilih Program Studi -</option>');
+
+            if (selectedKampus && selectedJurusan && dataStruktur[selectedKampus]?.[selectedJurusan]) {
+                $('#prodi-container').show();
+                $programStudi.prop('disabled', false);
+                dataStruktur[selectedKampus][selectedJurusan].forEach(prodi => {
+                    $programStudi.append(`<option value="${prodi}">${prodi}</option>`);
+                });
+            } else {
+                $('#prodi-container').hide();
+                $programStudi.prop('disabled', true);
+            }
+        });
+
+        function validateFileInput(inputId, errorId) {
+            const fileInput = document.getElementById(inputId);
+            const errorElement = document.getElementById(errorId);
+            const file = fileInput.files[0];
+            const allowedTypes = ['image/jpeg', 'image/png'];
+
+            if (file) {
+                if (!allowedTypes.includes(file.type)) {
+                    errorElement.textContent = 'Format file tidak valid. Hanya JPG dan PNG yang diperbolehkan.';
+                    fileInput.value = '';
+                    return;
                 }
-            });
 
-            $('#jurusan').change(function () {
-                const selectedJurusan = $(this).val();
-                const $programStudi = $('#program_studi');
-                const $prodiContainer = $('#prodi-container');
-
-                $programStudi.empty().append('<option value="">- Pilih Program Studi -</option>');
-
-                if (selectedJurusan && programStudiData[selectedJurusan]) {
-                    $prodiContainer.show();
-                    $programStudi.prop('disabled', false);
-                    programStudiData[selectedJurusan].forEach(prodi => {
-                        $programStudi.append(`<option value="${prodi}">${prodi}</option>`);
-                    });
+                if (file.size > maxSize) {
+                    errorElement.textContent = 'Ukuran file melebihi 5 MB. Silakan pilih file yang lebih kecil.';
+                    fileInput.value = '';
                 } else {
-                    $prodiContainer.hide();
-                    $programStudi.prop('disabled', true);
-                }
-            });
-
-            function validateFileInput(inputId, errorId) {
-                const fileInput = document.getElementById(inputId);
-                const errorElement = document.getElementById(errorId);
-                const file = fileInput.files[0];
-                const allowedTypes = ['image/jpeg', 'image/png'];
-
-                if (file) {
-                    if (!allowedTypes.includes(file.type)) {
-                        errorElement.textContent = 'Format file tidak valid. Hanya JPG dan PNG yang diperbolehkan.';
-                        fileInput.value = '';
-                        return;
-                    }
-
-                    if (file.size > maxSize) {
-                        errorElement.textContent = 'Ukuran file melebihi 5 MB. Silakan pilih file yang lebih kecil.';
-                        fileInput.value = '';
-                    } else {
-                        errorElement.textContent = '';
-                    }
+                    errorElement.textContent = '';
                 }
             }
+        }
 
-            $('#pas_foto').on('change', () => validateFileInput('pas_foto', 'error-pas_foto'));
-            $('#ktm_atau_ktp').on('change', () => validateFileInput('ktm_atau_ktp', 'error-ktm_atau_ktp'));
+        $('#pas_foto').on('change', () => validateFileInput('pas_foto', 'error-pas_foto'));
+        $('#ktm_atau_ktp').on('change', () => validateFileInput('ktm_atau_ktp', 'error-ktm_atau_ktp'));
 
-            $('#form-tambah').validate({
-                submitHandler: function (form) {
-                    const formData = new FormData(form);
+        $('#form-tambah').validate({
+            submitHandler: function (form) {
+                const formData = new FormData(form);
 
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            $('.error-text').text('');
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        $('.error-text').text('');
 
-                            if (response.status) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil Mendaftar',
-                                    text: response.message
-                                }).then(result => {
-                                    if (result.isConfirmed) {
-                                        window.location.href = "{{ route('user') }}";
-                                    }
-                                });
-                            } else {
-                                $.each(response.msgField, function (prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Terjadi Kesalahan',
-                                    text: response.message
-                                });
-                            }
+                        if (response.status) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Mendaftar',
+                                text: response.message
+                            }).then(result => {
+                                if (result.isConfirmed) {
+                                    window.location.href = "{{ route('dashboard.mahasiswa') }}";
+                                }
+                            });
+                        } else {
+                            $.each(response.msgField, function (prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
                         }
-                    });
+                    }
+                });
 
-                    return false;
-                },
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function (element) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function (element) {
-                    $(element).removeClass('is-invalid');
-                }
-            });
+                return false; // prevent default form submission
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element) {
+                $(element).removeClass('is-invalid');
+            }
         });
-    </script>
+    });
+</script>
+
 
 
 @endpush

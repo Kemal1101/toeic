@@ -44,12 +44,19 @@
                         Status Verifikasi:
                     </span>
                     <span style="color:
-                    {{ $status === 'PENDING' ? 'orange' : ($status === 'TERVERIFIKASI' ? 'green' : 'red') }}">{{ $status }}
-                    @if ($status === 'DITOLAK')
-                        ( {{ $notes }} )  <a href="{{ route('pendaftaran.edit_ajax', ['id' => $dataPendaftaran->data_pendaftaran_id]) }}" class="btn btn-sm btn-danger">
-                            Edit Data
-                        </a>
-                    @endif</span>
+                        {{ $status === 'PENDING' ? 'orange' : ($status === 'TERVERIFIKASI' ? 'green' : 'red') }}">
+                        @if ($status === 'PENDING')
+                            Masih menunggu verifikasi
+                        @else
+                            {{ $status }}
+                            @if ($status === 'DITOLAK')
+                                ( {{ $notes }} )
+                                <a href="{{ route('pendaftaran.edit_ajax', ['id' => $dataPendaftaran->data_pendaftaran_id]) }}" class="btn btn-sm btn-danger">
+                                    Edit Data
+                                </a>
+                            @endif
+                        @endif
+                    </span>
                 </div>
             @endif
         </div>

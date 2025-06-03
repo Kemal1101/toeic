@@ -4,35 +4,54 @@
 @section('card-title')
     <div class="row align-items-center">
         <div class="col">
-            <h5 class="mb-0 fw-bold">Data Pendaftar</h5>
+            <h5 class="mb-3 fw-bold">Data Pendaftar</h5>
         </div>
-        <div class="col-auto">
-            <div class="input-group input-group-sm">
-                <label class="input-group-text bg-primary text-white" for="filter_tahun">
-                    <i class="fas fa-calendar-alt me-1"></i> Tahun
-                </label>
-                <select id="filter_tahun" class="form-select">
-                    <option value="">Semua Tahun</option>
-                    @foreach (range(date('Y'), 2020) as $tahun)
-                        <option value="{{ $tahun }}">{{ $tahun }}</option>
-                    @endforeach
-                </select>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-text bg-primary text-white" for="filter_tahun">
+                            <i class="fas fa-calendar-alt me-1"></i> Tahun
+                        </label>
+                        <select id="filter_tahun" class="form-select">
+                            <option value="">Semua Tahun</option>
+                            @foreach (range(date('Y'), 2020) as $tahun)
+                                <option value="{{ $tahun }}">{{ $tahun }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-text bg-primary text-white" for="filter_verifikasi_data">
+                            <i class="fas fa-calendar-alt me-1"></i> Status Verifikasi
+                        </label>
+                        <select id="filter_verifikasi_data" class="form-select">
+                            <option value="">Semua Status</option>
+                            @foreach (['PENDING', 'DITOLAK', 'TERVERIFIKASI'] as $verifikasi_data)
+                                <option value="{{ $verifikasi_data }}">{{ $verifikasi_data }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-auto">
-            <div class="input-group input-group-sm">
-                <label class="input-group-text bg-primary text-white" for="filter_verifikasi_data">
-                    <i class="fas fa-calendar-alt me-1"></i> Status Verifikasi
-                </label>
-                <select id="filter_verifikasi_data" class="form-select">
-                    <option value="">Semua Status</option>
-                    @foreach (['PENDING', 'DITOLAK', 'TERVERIFIKASI'] as $verifikasi_data)
-                        <option value="{{ $verifikasi_data }}">{{ $verifikasi_data }}</option>
-                    @endforeach
-                </select>
+            <div class="col-auto">
+                <!-- Switch Button -->
+                <div class="switch-container d-flex align-items-center gap-2 flex-nowrap">
+                    <span class="fw-bold mb-0">(Pendaftaran)</span>
+
+                    <div class="custom-switch" id="switch-pendaftaran" data-status="{{ $status }}">
+                        <div class="switch-slider"></div>
+                    </div>
+
+                    <span class="switch-label fw-bold mb-0 text-nowrap" id="switch-label">
+                        {{ $status === 'y' ? 'Dibuka' : 'Ditutup' }}
+                    </span>
+                </div>
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('content')
@@ -136,7 +155,7 @@
 let dataPendaftaran;
 
 $(document).ready(function() {
-        dataPendaftar = $('#table_pendaftar').DataTable({
+        dataPendaftaran = $('#table_pendaftar').DataTable({
         processing: true,
         serverSide: true,
         // deferLoading: 0, // mencegah load otomatis
@@ -200,13 +219,94 @@ $(document).ready(function() {
     });
 
     $('#filter_tahun, #filter_verifikasi_data').on('change', function () {
-        dataPendaftar.ajax.reload();
+        dataPendaftaran.ajax.reload();
     });
 
 });
 
+$(document).ready(function () {
+        const $switch = $('#switch-pendaftaran');
+        const $label = $('#switch-label');
+        const initialStatus = $switch.data('status');
+
+        // Apply initial style
+        if (initialStatus === 'y') {
+            $switch.addClass('active');
+        }
+
+        $switch.on('click', function () {
+            const isActive = $(this).hasClass('active');
+            const newValue = isActive ? 'n' : 'y';
+
+            // UI update
+            $(this).toggleClass('active');
+            $label.text(newValue === 'y' ? 'Dibuka' : 'Ditutup');
+
+            // Send to server
+            $.ajax({
+                url: '{{ route("setting.togglePendaftaran") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    value: newValue
+                },
+                success: function (response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: response.message
+                    }).then(() => {
+                        location.reload(); // Reload setelah user klik "Oke"
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Tidak dapat mengubah status.'
+                    });
+                }
+            });
+
+        });
+    });
 
 </script>
+<style>
+    .custom-switch {
+        width: 60px;
+        height: 28px;
+        background-color: #ccc;
+        border-radius: 30px;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .custom-switch.active {
+        background-color: #28a745;
+    }
+
+    .custom-switch .switch-slider {
+        width: 24px;
+        height: 24px;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s;
+    }
+
+    .custom-switch.active .switch-slider {
+        transform: translateX(32px);
+    }
+
+    .switch-label {
+        width: 30px;
+        text-align: center;
+    }
+</style>
 
 
 @endpush

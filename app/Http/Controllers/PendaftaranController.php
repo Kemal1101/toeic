@@ -8,11 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class PendaftaranController extends Controller
 {
     public function index()
     {
+        $isPendaftaranOpen = DB::table('generalsettings')->where('gs_nama', 'isPendaftaranOpen')->value('gs_value');
+
+        if ($isPendaftaranOpen == 'n') {
+            return redirect()->back()->with('status', 'pendaftaran_tidak_dibuka');
+        }
         $user_id = Auth::user()->user_id;
 
         $sudahTerdaftar = Data_PendaftaranModel::where('user_id', $user_id)->exists();
@@ -79,7 +85,11 @@ class PendaftaranController extends Controller
 
     public function data_pendaftar()
     {
-        return view('pendaftaran.dataPendaftar');
+        $status = DB::table('generalSettings')
+        ->where('gs_nama', 'isPendaftaranOpen')
+        ->value('gs_value');
+
+    return view('pendaftaran.dataPendaftar', compact('status'));
     }
 
     public function getPendaftar(Request $request)

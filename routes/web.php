@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\GeneralSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/modal_export_pdf', [PendaftaranController::class, 'export_modal'])->name('data_pendaftar.modal_export_pdf');
         Route::get('/export_pdf', [PendaftaranController::class, 'export_pdf'])->name('data_pendaftar.export_pdf');
+        Route::post('/setting/toggle-pendaftaran', [GeneralSettingController::class, 'togglePendaftaran'])->name('setting.togglePendaftaran');
 
     });
 
