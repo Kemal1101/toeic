@@ -130,6 +130,12 @@
                   <p>Jadwal Peserta</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('nilai') }}" class="nav-link {{ request()->is('nilai') ? 'active' : '' }}">
+                  <i class="bi bi-pencil-square"></i>
+                  <p>Nilai Peserta</p>
+                </a>
+              </li>
             @endif
             @if (auth()->user()->role_id == 2)
             <li class="nav-item">
@@ -148,6 +154,12 @@
                 <a href="{{ route('jadwal.getJadwalPelaksanaan') }}" class="nav-link {{ request()->is('jadwal/getJadwalPelaksanaan') ? 'active' : '' }}">
                   <i class="bi bi-calendar"></i>
                   <p>Jadwal Pelaksanaan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('nilai.getNilaiPeserta') }}" class="nav-link {{ request()->is('nilai/getNilaiPeserta') ? 'active' : '' }}">
+                  <i class="bi bi-pencil-square"></i>
+                  <p>Nilai Peserta</p>
                 </a>
               </li>
             @endif

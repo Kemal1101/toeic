@@ -9,6 +9,7 @@ use App\Models\RoleModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Data_PendaftaranModel;
 use App\Models\JadwalModel;
+use App\Models\NilaiModel;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
 class UserModel extends Authenticable
@@ -34,6 +35,10 @@ class UserModel extends Authenticable
     public function jadwal(): HasMany
     {
         return $this->hasMany(JadwalModel::class, 'user_id', 'user_id');
+    }
+    public function nilai(): HasMany
+    {
+        return $this->hasMany(NilaiModel::class, 'user_id', 'user_id');
     }
 
 }

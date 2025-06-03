@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\NilaiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,16 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/{id}/delete_ajax', [JadwalController::class, 'confirm_ajax'])->name('jadwal.confirm_ajax');
         Route::delete('/{id}/delete_ajax', [JadwalController::class, 'delete_ajax'])->name('jadwal.delete_ajax');
+    });
+
+    Route::group(['prefix' => 'nilai'], function () {
+        Route::get('/', [NilaiController::class, 'index'])->name('nilai');
+        Route::get('/getNilai', [NilaiController::class, 'getNilai'])->name('nilai.getNilai');
+
+        Route::get('/getNilaiPeserta', [NilaiController::class, 'nilai'])->name('nilai.getNilaiPeserta');
+
+        Route::get('/import', [NilaiController::class, 'import'])->name('nilai.import');
+        Route::post('/import_ajax', [NilaiController::class, 'import_ajax'])->name('nilai.import_ajax');
     });
 });
 
