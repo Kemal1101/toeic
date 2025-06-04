@@ -107,14 +107,14 @@
             >
             @if (auth()->user()->role_id == 1)
             <li class="nav-item">
-                <a href="{{ route('dashboard.upa') }}" class="nav-link {{ request()->is('/dashboard/upa') ? 'active' : '' }}">
-                  <i class="nav-icon bi bi-person"></i>
+                <a href="{{ route('dashboard.upa') }}" class="nav-link {{ request()->is('dashboard/upa') ? 'active' : '' }}">
+                  <i class="bi bi-house-door"></i>
                   <p>Dashboard</p>
                 </a>
               </li>
             <li class="nav-item">
                 <a href="{{ route('user') }}" class="nav-link {{ request()->is('user') ? 'active' : '' }}">
-                  <i class="nav-icon bi bi-person"></i>
+                  <i class="bi bi-person"></i>
                   <p>User</p>
                 </a>
               </li>
@@ -136,11 +136,17 @@
                   <p>Nilai Peserta</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('sertif.data') }}" class="nav-link {{ request()->is('sertifikat/data') ? 'active' : '' }}">
+                  <i class="bi bi-award"></i>
+                  <p>Sertifikat Peserta</p>
+                </a>
+              </li>
             @endif
             @if (auth()->user()->role_id == 2)
             <li class="nav-item">
-                <a href="{{ route('dashboard.mahasiswa') }}" class="nav-link {{ request()->is('/dashboard/mahasiswa') ? 'active' : '' }}">
-                  <i class="nav-icon bi bi-person"></i>
+                <a href="{{ route('dashboard.mahasiswa') }}" class="nav-link {{ request()->is('dashboard/mahasiswa') ? 'active' : '' }}">
+                  <i class="bi bi-house-door"></i>
                   <p>Dashboard</p>
                 </a>
               </li>
@@ -160,6 +166,12 @@
                 <a href="{{ route('nilai.getNilaiPeserta') }}" class="nav-link {{ request()->is('nilai/getNilaiPeserta') ? 'active' : '' }}">
                   <i class="bi bi-pencil-square"></i>
                   <p>Nilai Peserta</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('sertif') }}" class="nav-link {{ request()->is('sertifikat/data') ? 'active' : '' }}">
+                  <i class="bi bi-award"></i>
+                  <p>Sertifikat Peserta</p>
                 </a>
               </li>
             @endif

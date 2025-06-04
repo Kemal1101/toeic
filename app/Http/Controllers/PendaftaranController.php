@@ -14,11 +14,6 @@ class PendaftaranController extends Controller
 {
     public function index()
     {
-        $isPendaftaranOpen = DB::table('generalsettings')->where('gs_nama', 'isPendaftaranOpen')->value('gs_value');
-
-        if ($isPendaftaranOpen == 'n') {
-            return redirect()->back()->with('status', 'pendaftaran_tidak_dibuka');
-        }
         $user_id = Auth::user()->user_id;
 
         $sudahTerdaftar = Data_PendaftaranModel::where('user_id', $user_id)->exists();
@@ -27,6 +22,12 @@ class PendaftaranController extends Controller
             return redirect()->back()->with('status', 'anda_sudah_mendaftar');
         }
 
+        $isPendaftaranOpen = DB::table('generalsettings')->where('gs_nama', 'isPendaftaranOpen')->value('gs_value');
+
+        if ($isPendaftaranOpen == 'n') {
+            return redirect()->back()->with('status', 'pendaftaran_tidak_dibuka');
+        }
+        
         $username = Auth::user()->username;
         $nama_lengkap = Auth::user()->nama_lengkap;
 

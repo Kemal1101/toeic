@@ -8,6 +8,7 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\GeneralSettingController;
+use App\Http\Controllers\SertifikatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,6 +92,23 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/import', [NilaiController::class, 'import'])->name('nilai.import');
         Route::post('/import_ajax', [NilaiController::class, 'import_ajax'])->name('nilai.import_ajax');
+    });
+
+    Route::group(['prefix' => 'sertifikat'], function () {
+        Route::get('/', [SertifikatController::class, 'index'])->name('sertif');
+        Route::get('/data', [SertifikatController::class, 'dataSertifikat'])->name('sertif.data');
+        Route::get('/getSertif', [SertifikatController::class, 'getSertif'])->name('sertif.getSertif');
+
+        Route::post('/toggle-status', [SertifikatController::class, 'toggleStatus'])->name('sertif.toggleStatus');
+
+        Route::get('/{id}/delete_ajax', [SertifikatController::class, 'confirm_ajax'])->name('sertif.confirm_ajax');
+        Route::delete('/{id}/delete_ajax', [SertifikatController::class, 'delete_ajax'])->name('sertif.delete_ajax');
+
+        Route::get('/import', [SertifikatController::class, 'import'])->name('sertif.import');
+        Route::post('/import_ajax', [SertifikatController::class, 'import_ajax'])->name('sertif.import_ajax');
+
+        Route::get('/create_ajax', [SertifikatController::class, 'create_ajax'])->name('sertif.create_ajax');
+        Route::post('/store_ajax', [SertifikatController::class, 'store_ajax'])->name('sertif.store_ajax');
     });
 });
 

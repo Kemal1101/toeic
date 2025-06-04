@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sertifikat', function (Blueprint $table) {
             $table->id('sertifikat_id');
             $table->unsignedBigInteger('user_id')->index();
-            $table->boolean('is_published')->default(false);
+            $table->boolean('is_taken')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('user');
