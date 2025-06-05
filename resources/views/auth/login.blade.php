@@ -44,167 +44,271 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="{{asset('adminlte/dist/css/adminlte.css') }}" />
     <!--end::Required Plugin(AdminLTE)-->
+    <style>
+      body {
+        background: radial-gradient(circle at center, #ffffff, #a3c4f3, #5a9bf6);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Source Sans 3', sans-serif;
+      }
+      .login-container {
+        display: flex;
+        width: 720px;
+        height: 400px;
+        border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        overflow: hidden;
+        background: white;
+      }
+      .login-left {
+        flex: 1;
+        background: linear-gradient(135deg, #6bb7ff, #2a6df4);
+        color: white;
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+      }
+      .login-left img {
+        width: 120px;
+        height: auto;
+        border-radius: 10px;
+        object-fit: contain;
+      }
+      .login-left h1 {
+        font-weight: 900;
+        font-size: 3rem;
+        margin: 0;
+        letter-spacing: 2px;
+      }
+      .login-left p {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-top: 10px;
+      }
+      .login-right {
+        flex: 1;
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .login-right form label {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 6px;
+      }
+      .input-group-text {
+        background-color: #f0f0f0;
+        border-left: none;
+        cursor: pointer;
+      }
+      .form-control {
+        border-right: none;
+        border-radius: 0.25rem 0 0 0.25rem;
+      }
+      .input-group .form-control:focus {
+        box-shadow: none;
+        border-color: #2a6df4;
+      }
+      .input-group {
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        overflow: hidden;
+      }
+      .input-group .input-group-text {
+        border: none;
+        border-left: 1px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 45px;
+        color: #555;
+      }
+      .forgot-password {
+        font-size: 0.875rem;
+        margin-top: -10px;
+        margin-bottom: 20px;
+        text-align: right;
+      }
+      .forgot-password a {
+        color: #2a6df4;
+        text-decoration: none;
+      }
+      .forgot-password a:hover {
+        text-decoration: underline;
+      }
+      .btn-signin {
+        background-color: #2a6df4;
+        border: none;
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+        padding: 12px 0;
+        border-radius: 12px;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(42,109,244,0.5);
+        transition: background-color 0.3s ease;
+      }
+      .btn-signin:hover {
+        background-color: #1e4ecf;
+      }
+      .error-text {
+        font-size: 0.875rem;
+        color: #dc3545;
+        margin-top: 4px;
+        display: block;
+      }
+    </style>
   </head>
   <!--end::Head-->
   <!--begin::Body-->
-  <body class="login-page bg-body-secondary">
-    <div class="login-box shadow-lg rounded" style="width: 400px; background: white;">
-        <div class="card card-outline card-primary">
-          <div class="card-header text-center bg-primary text-white rounded-top">
-            <h2 class="fw-bold mb-0">TOEIC</h2>
-            <small class="text-white">Silakan masuk untuk melanjutkan</small>
-          </div>
-          <div class="card-body">
-            <form action="{{ url('login') }}" method="POST" id="form-login">
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <div class="input-group">
-                  <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username">
-                  <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                </div>
-                <span id="error-username" class="text-danger error-text"></span>
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <div class="input-group">
-                  <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan password">
-                  <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                </div>
-                <span id="error-password" class="text-danger error-text"></span>
-              </div>
-              <div class="d-grid mb-3">
-                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-              </div>
-            </form>
-            <div class="text-center">
-              <a href="forgot-password.html" class="d-block mb-1">Lupa password?</a>
-            </div>
-          </div>
-        </div>
+  <body>
+    <div class="login-container" role="main">
+      <div class="login-left" aria-label="TOEIC branding and information">
+        <img src="/img/jti.jpeg" alt="JTI Logo" />
+        <h1>TOEIC</h1>
+        <p>Sistem Pendaftaran TOEIC<br>Politeknik Negeri Malang</p>
       </div>
-    <!-- /.login-box -->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-      crossorigin="anonymous"
-    ></script>
-    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="{{ asset('adminlte/dist/js/adminlte.js') }}"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-    <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-      const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
-        scrollbarClickScroll: true,
-      };
-      document.addEventListener('DOMContentLoaded', function () {
-        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-            scrollbars: {
-              theme: Default.scrollbarTheme,
-              autoHide: Default.scrollbarAutoHide,
-              clickScroll: Default.scrollbarClickScroll,
-            },
-          });
-        }
-      });
-    </script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- Memuat jQuery -->
+      <div class="login-right">
+        <form action="{{ url('login') }}" method="POST" id="form-login" novalidate>
+          <meta name="csrf-token" content="{{ csrf_token() }}">
+          <div class="mb-4">
+            <label for="username" class="form-label">Username</label>
+            <div class="input-group">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                class="form-control"
+                placeholder="Masukkan Username"
+                aria-describedby="username-icon"
+                required
+                minlength="4"
+                maxlength="20"
+              />
+              <span class="input-group-text" id="username-icon">
+                <i class="bi bi-envelope"></i>
+              </span>
+            </div>
+            <span id="error-username" class="error-text"></span>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group" id="password-group">
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="form-control"
+                placeholder="Masukkan Password"
+                aria-describedby="password-icon"
+                required
+                minlength="6"
+                maxlength="20"
+              />
+              <span class="input-group-text" id="password-icon" style="cursor:pointer;" title="Toggle Password Visibility">
+                <i class="bi bi-eye-slash" id="toggle-password-icon"></i>
+              </span>
+            </div>
+            <span id="error-password" class="error-text"></span>
+          </div>
+          <div class="forgot-password">
+            <a href="forgot-password.html">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn btn-signin">Sign In</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
 
     <!-- SweetAlert2 CSS (optional but recommended) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Memuat DataTables CSS dan JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-
-    <!-- Memuat CSS untuk Responsiveness -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-
-    <!-- Memuat JS untuk Responsiveness -->
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script>
-        $.ajaxSetup({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      // Password toggle show/hide
+      document.getElementById('password-icon').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+        const icon = document.getElementById('toggle-password-icon');
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        } else {
+          passwordInput.type = 'password';
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        }
+      });
+
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      $(document).ready(function () {
+        $('#form-login').validate({
+          rules: {
+            username: { required: true, minlength: 4, maxlength: 20 },
+            password: { required: true, minlength: 6, maxlength: 20 }
+          },
+          submitHandler: function (form) {
+            $.ajax({
+              url: form.action,
+              type: form.method,
+              data: $(form).serialize(),
+              success: function (response) {
+                if (response.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: response.message
+                  }).then(function () {
+                    window.location = response.redirect;
+                  });
+                } else {
+                  $('.error-text').text('');
+                  $.each(response.msgField, function (prefix, val) {
+                    $('#error-' + prefix).text(val[0]);
+                  });
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    text: response.message
+                  });
+                }
+              }
+            });
+            return false;
+          },
+          errorElement: 'span',
+          errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.input-group').append(error);
+          },
+          highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+          },
+          unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
           }
         });
-
-        $(document).ready(function() {
-          $("#form-login").validate({
-            rules: {
-              username: {required: true, minlength: 4, maxlength: 20},
-              password: {required: true, minlength: 6, maxlength: 20}
-            },
-            submitHandler: function(form) { // ketika valid, maka bagian yg akan dijalankan
-              $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                  if(response.status){ // jika sukses
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: response.message,
-                    }).then(function() {
-                        window.location = response.redirect;
-                    });
-                  }else{ // jika error
-                    $('.error-text').text('');
-                    $.each(response.msgField, function(prefix, val) {
-                        $('#error-'+prefix).text(val[0]);
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Terjadi Kesalahan',
-                        text: response.message
-                    });
-                  }
-                }
-              });
-              return false;
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-              error.addClass('invalid-feedback');
-              element.closest('.input-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-              $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-              $(element).removeClass('is-invalid');
-            }
-          });
-        });
-      </script>
-    <!--end::Script-->
+      });
+    </script>
   </body>
   <!--end::Body-->
 </html>
