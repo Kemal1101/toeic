@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class PendaftaranController extends Controller
 {
@@ -27,7 +28,7 @@ class PendaftaranController extends Controller
         if ($isPendaftaranOpen == 'n') {
             return redirect()->back()->with('status', 'pendaftaran_tidak_dibuka');
         }
-        
+
         $username = Auth::user()->username;
         $nama_lengkap = Auth::user()->nama_lengkap;
 
@@ -95,18 +96,17 @@ class PendaftaranController extends Controller
 
     public function getPendaftar(Request $request)
     {
-        $query = Data_PendaftaranModel::with('user'); // eager loading user (username dan nama_lengkap)
+        $query = Data_PendaftaranModel::with('user');
 
-        // Filter tahun (dari created_at)
+        // Filter tahun
         if ($request->filled('tahun')) {
-            $query->whereYear('created_at', $request->tahun);
+            $query->whereYear('data_pendaftaran.created_at', $request->tahun);
         }
 
         // Filter status verifikasi
         if ($request->filled('verifikasi_data')) {
-            $query->where('verifikasi_data', $request->verifikasi_data);
+            $query->where('data_pendaftaran.verifikasi_data', $request->verifikasi_data);
         }
-        // jika tidak di-filter, biarkan tampil semua data
 
         return DataTables::of($query)
             ->addColumn('username', function ($pendaftar) {
@@ -115,7 +115,7 @@ class PendaftaranController extends Controller
             ->addColumn('nama_lengkap', function ($pendaftar) {
                 return $pendaftar->user->nama_lengkap ?? '-';
             })
-           ->addColumn('pas_foto', function ($pendaftar) {
+            ->addColumn('pas_foto', function ($pendaftar) {
                 $url = asset('uploads/pasfoto/' . $pendaftar->pas_foto);
                 return "<img src='{$url}' alt='Pas Foto' width='80'>";
             })
@@ -124,11 +124,6 @@ class PendaftaranController extends Controller
                 return "<img src='{$url}' alt='KTP/KTM' width='80'>";
             })
             ->rawColumns(['pas_foto', 'ktm_atau_ktp'])
-            // ->addColumn('aksi', function ($pendaftar) {
-            //     // optional: tambahkan tombol aksi jika dibutuhkan
-            //     return '<button class="btn btn-info btn-sm">Detail</button>';
-            // })
-            // ->rawColumns(['aksi']) // jika pakai HTML di kolom
             ->make(true);
     }
 
@@ -226,37 +221,68 @@ class PendaftaranController extends Controller
         $dataPendaftar = Data_PendaftaranModel::find($id);
         $user = UserModel::where('user_id', $dataPendaftar->user_id)->first();
         return view('pendaftaran.edit_ajax', ['dataPendaftar' => $dataPendaftar, 'user' => $user]);
-
     }
 
     public function update_ajax(Request $request, String $id)
     {
+        // Temukan data pendaftar berdasarkan ID
         $dataPendaftar = Data_PendaftaranModel::find($id);
 
-        // Siapkan array data untuk update
-        $updateData = $request->except(['pas_foto', 'ktm_atau_ktp']); // jangan langsung ambil semua
+        // Jika data pendaftar tidak ditemukan, kembalikan respons error 404
+        if (!$dataPendaftar) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data pendaftaran tidak ditemukan.'
+            ], 404);
+        }
 
+        // Siapkan array data untuk update, kecualikan input file
+        $updateData = $request->except(['pas_foto', 'ktm_atau_ktp']);
+
+        // --- Logika untuk Pas Foto ---
         if ($request->hasFile('pas_foto')) {
             $foto = $request->file('pas_foto');
             $foto_nama = 'pasfoto_' . Auth::user()->username . '.' . $foto->getClientOriginalExtension();
+            $path_foto = public_path('uploads/pasfoto/' . $foto_nama); // Path lengkap untuk file baru
+
+            // Hapus file pas foto lama jika ada dan file baru memiliki nama yang sama
+            // Penting: Periksa apakah $dataPendaftar->pas_foto ada di database
+            if ($dataPendaftar->pas_foto && File::exists($path_foto)) {
+                File::delete($path_foto);
+            }
+
+            // Pindahkan file pas foto yang baru
             $foto->move(public_path('uploads/pasfoto'), $foto_nama);
-            $updateData['pas_foto'] =  $foto_nama; // simpan path
+            $updateData['pas_foto'] = $foto_nama; // Simpan nama file baru ke array update
         }
 
+        // --- Logika untuk KTM atau KTP ---
         if ($request->hasFile('ktm_atau_ktp')) {
             $ktp = $request->file('ktm_atau_ktp');
             $ktp_nama = 'ktmktp_' . Auth::user()->username . '.' . $ktp->getClientOriginalExtension();
+            $path_ktp = public_path('uploads/ktmktp/' . $ktp_nama); // Path lengkap untuk file baru
+
+            // Hapus file KTM/KTP lama jika ada dan file baru memiliki nama yang sama
+            // Penting: Periksa apakah $dataPendaftar->ktm_atau_ktp ada di database
+            if ($dataPendaftar->ktm_atau_ktp && File::exists($path_ktp)) {
+                File::delete($path_ktp);
+            }
+
+            // Pindahkan file KTM/KTP yang baru
             $ktp->move(public_path('uploads/ktmktp'), $ktp_nama);
-            $updateData['ktm_atau_ktp'] = $ktp_nama; // simpan path
+            $updateData['ktm_atau_ktp'] = $ktp_nama; // Simpan nama file baru ke array update
         }
 
+        // Set status verifikasi data menjadi PENDING setiap kali ada update
         $updateData['verifikasi_data'] = 'PENDING';
 
+        // Lakukan update pada record di database
         $dataPendaftar->update($updateData);
 
+        // Kembalikan respons JSON sukses
         return response()->json([
             'status' => true,
-            'message' => 'Data berhasil diupdate'
+            'message' => 'Data berhasil diupdate.'
         ]);
     }
 

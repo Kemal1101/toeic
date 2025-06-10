@@ -76,7 +76,7 @@ class UserController extends Controller
                         $role = RoleModel::where('role', $role)->first();
 
                         if ($role) {
-                            $tanggal_lahir_excel = $value['D'];
+                            $tanggal_lahir_excel = $value['E'];
 
                             // Cek apakah berupa serial number dan ubah ke format tanggal
                             if (is_numeric($tanggal_lahir_excel)) {
@@ -90,8 +90,9 @@ class UserController extends Controller
                                 'nama_lengkap' => $value['A'],
                                 'username' => $value['B'],
                                 'role_id' => $role->role_id,
+                                'tempat_lahir' => $value['D'],
                                 'tanggal_lahir' => $tanggal_lahir,
-                                'password' => Hash::make($value['E']),
+                                'password' => Hash::make($value['F']),
                                 'created_at' => now(),
                             ];
                         } else {
@@ -137,6 +138,7 @@ class UserController extends Controller
             'nama_lengkap' => $request->input('nama_lengkap'),
             'username' => $request->input('username'),
             'role_id' => $request->input('role_id'),
+            'tempat_lahir' => $request->input('tempat_lahir'),
             'tanggal_lahir' => $request->input('tanggal_lahir'),
             'password' => $request->input('password') ? Hash::make($request->input('password')) : $user->password,
         ]);
@@ -185,6 +187,7 @@ class UserController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'username' => 'required|string|max:100|unique:user,username',
             'role_id' => 'required|integer',
+            'tempat_lahir' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
             'password' => 'required|string|min:6'
         ]);
@@ -193,6 +196,7 @@ class UserController extends Controller
         $user->nama_lengkap = $request->input('nama_lengkap');
         $user->username = $request->input('username');
         $user->role_id = $request->input('role_id');
+        $user->tempat_lahir = $request->input('tempat_lahir');
         $user->tanggal_lahir = $request->input('tanggal_lahir');
         $user->password = Hash::make($request->input('password'));
         $user->created_at = now();
@@ -205,5 +209,9 @@ class UserController extends Controller
         ]);
     }
 
+    public function edit_password_ajax(String $id){
+        $user = UserModel::find($id);
+        return view('user.edit_password_ajax', ['user' => $user]);
+    }
 
 }

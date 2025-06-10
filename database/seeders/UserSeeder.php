@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
             'username' => 'admin',
             'password' => Hash::make('1234567890'),
             'nama_lengkap' => 'Muhammad Kemal Syahru Ramadhan',
-            'tanggal_lahir' => '2003-11-01'
+            'tanggal_lahir' => '2003-11-01',
+            'tempat_lahir' => 'Surabaya'
         ];
 
         DB::table('user')->insert($data);

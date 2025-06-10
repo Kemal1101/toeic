@@ -1,10 +1,10 @@
 @extends('layouts.template')
 
-@section('page-title', 'Pendaftar')
+@section('page-title', 'Data Request SK')
 @section('card-title')
     <div class="row align-items-center">
         <div class="col">
-            <h5 class="mb-3 fw-bold">Data Pendaftar</h5>
+            <h5 class="mb-3 fw-bold">Data mahasiswa yang request surat keterangan mengikuti toeic</h5>
         </div>
         <div class="d-flex justify-content-between align-items-center">
             <div class="row">
@@ -33,20 +33,6 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
-            </div>
-            <div class="col-auto">
-                <!-- Switch Button -->
-                <div class="switch-container d-flex align-items-center gap-2 flex-nowrap">
-                    <span class="fw-bold mb-0">(Pendaftaran)</span>
-
-                    <div class="custom-switch" id="switch-pendaftaran" data-status="{{ $status }}">
-                        <div class="switch-slider"></div>
-                    </div>
-
-                    <span class="switch-label fw-bold mb-0 text-nowrap" id="switch-label">
-                        {{ $status === 'y' ? 'Dibuka' : 'Ditutup' }}
-                    </span>
                 </div>
             </div>
         </div>
@@ -80,11 +66,11 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-end mt-3 mb-1">
+    {{-- <div class="d-flex justify-content-end mt-3 mb-1">
     <button type="button" class="btn btn-sm btn-primary"
         onclick="modalActionExportPdf('{{ route('data_pendaftar.modal_export_pdf') }}')">
         Export Pendaftar
-    </button>
+    </button> --}}
 </div>
 
 @endsection
@@ -155,26 +141,28 @@
 let dataPendaftaran;
 
 $(document).ready(function() {
-    dataPendaftaran = $('#table_pendaftar').DataTable({
+        dataPendaftaran = $('#table_pendaftar').DataTable({
         processing: true,
         serverSide: true,
+        // deferLoading: 0, // mencegah load otomatis
         ajax: {
-            url: "{{ route('pendaftaran.getPendaftar') }}",
+            url: "{{ route('suratPernyataan.getDataSuratPernyataan') }}",
             type: "GET",
             data: function(d) {
-                d.tahun = $('#filter_tahun').val();
-                d.verifikasi_data = $('#filter_verifikasi_data').val();
+                d.tahun = $('#filter_tahun').val(); // filter tahun
+                d.verifikasi_data = $('#filter_verifikasi_data').val(); // filter status verifikasi
             }
         },
         columns: [
-            // Kolom 'nama_lengkap' diambil dari relasi user, jadi tetap searchable
-            { data: 'nama_lengkap', name: 'user.nama_lengkap' }, // <--- PENTING: Ubah name menjadi 'user.nama_lengkap'
-            { data: 'username', name: 'user.username' }, // <--- PENTING: Ubah name menjadi 'user.username'
+            { data: 'nama_lengkap', name: 'user.nama_lengkap' },
+            { data: 'username', name: 'user.username' },
             {
                 data: 'verifikasi_data',
-                name: 'verifikasi_data', // Ini mungkin ada di tabel data_pendaftaran, biarkan searchable
+                name: 'verifikasi_data',
+                orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
+                searchable: false,
                 render: function(data, type, row) {
-                    let badgeClass = 'badge rounded-pill p-2 fs-7 fw-normal';
+                    let badgeClass = 'badge rounded-pill p-2 fs-7 fw-normal'; // Ukuran seperti tombol
                     switch(data) {
                         case 'PENDING':
                             badgeClass += ' bg-warning text-dark';
@@ -195,85 +183,38 @@ $(document).ready(function() {
                 data: null,
                 name: 'aksi',
                 orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
-                searchable: false,     // <--- PENTING: Matikan pencarian untuk kolom ini
+                searchable: false,
                 render: function(data, type, row) {
-                    let url_verifikasi = `{{ route('pendaftaran.verifikasi', ['id' => ':id']) }}`;
-                    url_verifikasi = url_verifikasi.replace(':id', row.data_pendaftaran_id);
+                    let url_verifikasi = `{{ route('suratPernyataan.verifikasi', ['id' => ':id']) }}`;
+                    url_verifikasi = url_verifikasi.replace(':id', row.surat_pernyataan_id);
 
                     let disabled = (row.verifikasi_data === 'DITOLAK' || row.verifikasi_data === 'TERVERIFIKASI')
                         ? 'disabled'
                         : '';
-                    return disabled ? `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-secondary" ${disabled}>Verifikasi</button>`
-                       : `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-primary" ${disabled}>Verifikasi</button>`;
+                     return disabled ? `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-secondary" ${disabled}>Verifikasi</button>`
+                     : `<button onclick="modalAction('${url_verifikasi}', '${row.verifikasi_data}')" class="btn btn-sm btn-primary" ${disabled}>Verifikasi</button>`;
                 }
             },
             {
                 data: null,
                 name: 'hapus',
                 orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
-                searchable: false,     // <--- PENTING: Matikan pencarian untuk kolom ini
+                searchable: false,
                 render: function(data, type, row) {
                     let url_hapus = `{{ route('pendaftaran.confirm_ajax', ['id' => ':id']) }}`;
                     url_hapus = url_hapus.replace(':id', row.data_pendaftaran_id);
 
-                    return `<button onclick="modalActionHapusEdit('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
+                    return `<button button onclick="modalActionHapusEdit('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
                 }
             }
         ],
     });
-});
 
     $('#filter_tahun, #filter_verifikasi_data').on('change', function () {
         dataPendaftaran.ajax.reload();
     });
 
-
-$(document).ready(function () {
-        const $switch = $('#switch-pendaftaran');
-        const $label = $('#switch-label');
-        const initialStatus = $switch.data('status');
-
-        // Apply initial style
-        if (initialStatus === 'y') {
-            $switch.addClass('active');
-        }
-
-        $switch.on('click', function () {
-            const isActive = $(this).hasClass('active');
-            const newValue = isActive ? 'n' : 'y';
-
-            // UI update
-            $(this).toggleClass('active');
-            $label.text(newValue === 'y' ? 'Dibuka' : 'Ditutup');
-
-            // Send to server
-            $.ajax({
-                url: '{{ route("setting.togglePendaftaran") }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    value: newValue
-                },
-                success: function (response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: response.message
-                    }).then(() => {
-                        location.reload(); // Reload setelah user klik "Oke"
-                    });
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal',
-                        text: 'Tidak dapat mengubah status.'
-                    });
-                }
-            });
-
-        });
-    });
+});
 
 </script>
 <style>

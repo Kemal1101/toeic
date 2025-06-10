@@ -24,7 +24,7 @@ class NilaiController extends Controller
 
         // Filter tahun (dari created_at)
         if ($request->filled('tahun')) {
-            $query->whereYear('created_at', $request->tahun);
+            $query->whereYear('nilai.created_at', $request->tahun);
         }
 
         return DataTables::of($query)

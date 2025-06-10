@@ -171,8 +171,8 @@
   <body>
     <div class="login-container" role="main">
       <div class="login-left" aria-label="TOEIC branding and information">
-        <img src="/img/jti.jpeg" alt="JTI Logo" />
-        <h1>TOEIC</h1>
+        <img src="{{asset('logo.jpeg') }}" alt="JTI Logo" />
+        <h1>SIPTOC</h1>
         <p>Sistem Pendaftaran TOEIC<br>Politeknik Negeri Malang</p>
       </div>
       <div class="login-right">

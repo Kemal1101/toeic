@@ -47,22 +47,27 @@
                         <small id="error-nama_lengkap" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
-                        <input value="" type="password" name="password" id="password" class="form-control">
-                        <small class="form-text text-muted">Abaikan jika tidak ingin ubah password</small>
-                        <small id="error-password" class="error-text form-text text-danger"></small>
+                        <label>Tempat Lahir</label>
+                        <input value="{{ $user->tempat_lahir }}" type="text" name="tempat_lahir" id="tempat_lahir" class="form-control" required>
+                        <small id="error-tempat_lahir" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
                         <label for="tanggal_lahir">Tanggal Lahir</label>
                         <input
-                            type="date"
-                            name="tanggal_lahir"
-                            id="tanggal_lahir"
-                            class="form-control"
-                            value="{{ old('tanggal_lahir', $user->tanggal_lahir ?? '') }}"
+                        type="date"
+                        name="tanggal_lahir"
+                        id="tanggal_lahir"
+                        class="form-control"
+                        value="{{ old('tanggal_lahir', $user->tanggal_lahir ?? '') }}"
                         >
                         <small class="form-text text-muted">Abaikan jika tidak ingin ubah tanggal lahir</small>
                         <small id="error-tanggal_lahir" class="error-text form-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input value="" type="password" name="password" id="password" class="form-control">
+                        <small class="form-text text-muted">Abaikan jika tidak ingin ubah password</small>
+                        <small id="error-password" class="error-text form-text text-danger"></small>
                     </div>
                 </div>
                 <div class="modal-footer">

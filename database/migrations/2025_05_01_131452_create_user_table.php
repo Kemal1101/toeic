@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('username', 15)->unique();
             $table->string('nama_lengkap', 100);
             $table->string('password');
+            $table->string('tempat_lahir', 50);
             $table->date('tanggal_lahir');
 
             $table->foreign('role_id')->references('role_id')->on('role');

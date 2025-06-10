@@ -78,6 +78,8 @@
                 {
                     data: null,
                     name: 'aksi',
+                    orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
+                    searchable: false,
                     render: function(data, type, row) {
                         let url_edit = `{{ route('user.edit_ajax', ['id' => ':id']) }}`;
                         url_edit = url_edit.replace(':id', row.user_id);

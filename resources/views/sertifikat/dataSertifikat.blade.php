@@ -90,11 +90,13 @@ $(document).ready(function() {
             }
         },
         columns: [
-            { data: 'nama_lengkap', name: 'nama_lengkap' },
-            { data: 'username', name: 'username' },
+            { data: 'nama_lengkap', name: 'user.nama_lengkap' },
+            { data: 'username', name: 'user.username' },
             {
                 data: 'is_taken',
                 name: 'is_taken',
+                orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
+                searchable: false,
                 render: function(data, type, row) {
                     const selectedTrue = data == 1 ? 'selected' : '';
                     const selectedFalse = data == 0 ? 'selected' : '';
@@ -109,6 +111,8 @@ $(document).ready(function() {
             {
                 data: null,
                 name: 'hapus',
+                orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
+                searchable: false,
                 render: function(data, type, row) {
                     let url_hapus = `{{ route('sertif.confirm_ajax', ['id' => ':id']) }}`;
                     url_hapus = url_hapus.replace(':id', row.sertifikat_id);

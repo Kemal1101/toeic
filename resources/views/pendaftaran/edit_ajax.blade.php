@@ -82,11 +82,6 @@
                         Pas Foto (3x4)
                         <span class="text-muted d-block small">(Maks. ukuran 5 MB | Format: JPG, PNG)</span>
                     </label>
-                    @if($dataPendaftar->pas_foto)
-                        <div class="mb-2">
-                            <img src="{{ asset('uploads/pasfoto/' . $dataPendaftar->pas_foto) }}" alt="Pas Foto" class="img-thumbnail" width="150">
-                        </div>
-                    @endif
                     <input type="file" name="pas_foto" id="pas_foto" class="form-control-file">
                     <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah foto.</small>
                 </div>
@@ -96,11 +91,6 @@
                         Upload KTM atau KTP
                         <span class="text-muted d-block small">(Maks. ukuran 5 MB | Format: JPG, PNG)</span>
                     </label>
-                    @if($dataPendaftar->ktm_atau_ktp)
-                        <div class="mb-2">
-                            <img src="{{ asset('uploads/ktmktp/' . $dataPendaftar->ktm_atau_ktp) }}" alt="KTM/KTP" class="img-thumbnail" width="150">
-                        </div>
-                    @endif
                     <input type="file" name="ktm_atau_ktp" id="ktm_atau_ktp" class="form-control-file">
                     <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah dokumen.</small>
                 </div>

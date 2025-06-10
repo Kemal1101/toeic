@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserModel;
+use App\Models\Data_PendaftaranModel;
 use Illuminate\Support\Facades\Auth;
+use setasign\Fpdi\Fpdi;
 
 class SertifikatController extends Controller
 {
@@ -191,4 +193,5 @@ class SertifikatController extends Controller
             'message' => 'Data berhasil disimpan'
         ]);
     }
+
 }

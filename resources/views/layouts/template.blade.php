@@ -59,12 +59,12 @@
             <!--begin::User Menu-->
             <li class="nav-item user-menu">
                 <a href="#" class="nav-link">
-                <img
+                {{-- <img
                     src="{{ asset('adminlte/dist/assets/img/user2-160x160.jpg') }}"
                     class="user-image rounded-circle shadow"
                     alt="User Image"
                 />
-                <span class="d-none d-md-inline">{{ Auth::user()->nama_lengkap ?? 'User' }}</span>
+                <span class="d-none d-md-inline">{{ Auth::user()->nama_lengkap ?? 'User' }}</span> --}}
                 </a>
             </li>
             <!--end::User Menu-->
@@ -82,7 +82,7 @@
           <a href="" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="{{ asset('Logo-Polinema.png') }}"
+              src="{{ asset('Logo-Polinema1.png') }}"
               alt="AdminLTE Logo"
               class="brand-image shadow"
               style="width: auto; height: 100px;"
@@ -142,6 +142,12 @@
                   <p>Sertifikat Peserta</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('suratPernyataan.dataRequestSuratPernyataan') }}" class="nav-link {{ request()->is('surat_keterangan/data_request') ? 'active' : '' }}">
+                  <i class="bi bi-file-earmark-text"></i>
+                  <p>Surat Keterangan</p>
+                </a>
+              </li>
             @endif
             @if (auth()->user()->role_id == 2)
             <li class="nav-item">
@@ -172,6 +178,12 @@
                 <a href="{{ route('sertif') }}" class="nav-link {{ request()->is('sertifikat/data') ? 'active' : '' }}">
                   <i class="bi bi-award"></i>
                   <p>Sertifikat Peserta</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('surat_keterangan') }}" class="nav-link {{ request()->is('surat_keterangan') ? 'active' : '' }}">
+                  <i class="bi bi-award"></i>
+                  <p>Surat Keterangan</p>
                 </a>
               </li>
             @endif
@@ -324,16 +336,18 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
-                text: 'Anda sudah mendaftar.',
+                html: 'Anda sudah mendaftar. Silakan Daftar <a href="https://itc-indonesia.com/toeic/" target="_blank" rel="noopener noreferrer">Mandiri</a>.',
             });
         </script>
     @endif
+
+
     @if (session('status') == 'pendaftaran_tidak_dibuka');
         <script>
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan',
-                text: 'Pendaftaran Ditutup.',
+                html: 'Pendaftaran Ditutup.',
             });
         </script>
     @endif

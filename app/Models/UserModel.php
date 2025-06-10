@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Data_PendaftaranModel;
 use App\Models\JadwalModel;
 use App\Models\NilaiModel;
+use App\Models\suratPernyataanModel;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
 class UserModel extends Authenticable
@@ -39,6 +40,10 @@ class UserModel extends Authenticable
     public function nilai(): HasMany
     {
         return $this->hasMany(NilaiModel::class, 'user_id', 'user_id');
+    }
+    public function suratPernyataan(): HasMany
+    {
+        return $this->hasMany(suratPernyataanModel::class, 'user_id', 'user_id');
     }
 
 }

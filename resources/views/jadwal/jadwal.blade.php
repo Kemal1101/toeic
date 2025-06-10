@@ -71,13 +71,15 @@
                 type: "GET"
             },
             columns: [
-                { data: 'nama_lengkap', name: 'nama_lengkap' },
-                { data: 'username', name: 'username' },
+                { data: 'nama_lengkap', name: 'user.nama_lengkap' },
+                { data: 'username', name: 'user.username' },
                 { data: 'tanggal_pelaksanaan_tanggal', name: 'tanggal_pelaksanaan_tanggal' },
                 { data: 'tanggal_pelaksanaan_jam', name: 'tanggal_pelaksanaan_jam' },
                 {
                     data: null,
                     name: 'aksi',
+                    orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
+                    searchable: false,
                     render: function(data, type, row) {
                         let url_edit = `{{ route('user.edit_ajax', ['id' => ':id']) }}`;
                         url_edit = url_edit.replace(':id', row.user_id);

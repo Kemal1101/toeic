@@ -40,6 +40,13 @@
                         <small id="error-nama_lengkap" class="text-danger"></small>
                     </div>
 
+                    <!-- Tempat Lahir -->
+                    <div class="mb-3">
+                        <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
+                        <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control" required>
+                        <small id="error-tempat_lahir" class="text-danger"></small>
+                    </div>
+
                     <!-- Tanggal Lahir -->
                     <div class="mb-3">
                         <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
@@ -81,6 +88,7 @@
                 role_id: { required: true },
                 username: { required: true, minlength: 3, maxlength: 20 },
                 nama_lengkap: { required: true, minlength: 3, maxlength: 100 },
+                tempat_lahir: { required: true, minlength: 3, maxlength: 100 },
                 tanggal_lahir: { required: true, date: true },
                 password: { required: true, minlength: 6, maxlength: 20 }
             },

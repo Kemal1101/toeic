@@ -9,6 +9,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\SuratKeteranganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/create_ajax', [UserController::class, 'create_ajax'])->name('user.create_ajax');
         Route::post('/store_ajax', [UserController::class, 'store_ajax'])->name('user.store_ajax');
+
+        Route::get('/{id}/edit_password_ajax', [UserController::class, 'edit_password_ajax'])->name('user.edit_password_ajax');
+        Route::put('/{id}/update_password_ajax', [UserController::class, 'update_password_ajax'])->name('user.update_password_ajax');
     });
 
     Route::group(['prefix' => 'pendaftaran'], function () {
@@ -109,6 +113,26 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/create_ajax', [SertifikatController::class, 'create_ajax'])->name('sertif.create_ajax');
         Route::post('/store_ajax', [SertifikatController::class, 'store_ajax'])->name('sertif.store_ajax');
+
+    });
+
+    Route::group(['prefix' => 'surat_keterangan'], function () {
+        Route::get('/', [SuratKeteranganController::class, 'index'])->name('surat_keterangan');
+        Route::get('/upload_sertifikat', [SuratKeteranganController::class, 'uploadSertifikat'])->name('suratPernyataan.upload');
+        Route::post('/store_ajax', [SuratKeteranganController::class, 'store_ajax'])->name('suratPernyataan.store');
+
+        Route::get('/surat_pernyataan_toeic', [SuratKeteranganController::class, 'generateSuratPernyataanToeic'])->name('suratPernyataan.export_ajax');
+
+        Route::get('/data_request' , [SuratKeteranganController::class, 'dataRequestSuratPernyataan'])->name('suratPernyataan.dataRequestSuratPernyataan');
+        Route::get('/getSuratPernyataan', [SuratKeteranganController::class, 'getDataSuratPernyataan'])->name('suratPernyataan.getDataSuratPernyataan');
+        Route::get('/verifikasi/{id}', [SuratKeteranganController::class, 'verifikasi'])->name('suratPernyataan.verifikasi');
+
+        Route::put('/confrimverifikasi/{id}', [SuratKeteranganController::class, 'verifikasiSetuju'])->name('suratPernyataan.verifikasi.setuju');
+        Route::put('/confrimtolak/{id}', [SuratKeteranganController::class, 'verifikasiTolak'])->name('suratPernyataan.verifikasi.tolak');
+        Route::get('/notes/{id}', [SuratKeteranganController::class, 'notes'])->name('suratPernyataan.notes');
+
+        Route::get('/{id}/edit_ajax', [SuratKeteranganController::class, 'edit_ajax'])->name('suratPernyataan.edit_ajax');
+        Route::put('/{id}/update_ajax', [SuratKeteranganController::class, 'update_ajax'])->name('suratPernyataan.update_ajax');
     });
 });
 
