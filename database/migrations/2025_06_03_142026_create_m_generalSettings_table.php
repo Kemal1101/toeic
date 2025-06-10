@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('generalSettings', function (Blueprint $table) {
+        Schema::create('generalSettings', function (Blueprint $table) {
             $table->id('generalSettings_id');
             $table->string('gs_nama');
             $table->char('gs_value', 3);

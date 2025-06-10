@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('surat_pernyataan', function (Blueprint $table) {
+        Schema::create('surat_pernyataan', function (Blueprint $table) {
             $table->id('surat_pernyataan_id');
             $table->unsignedBigInteger('user_id')->index();
             $table->string('sertifikat1')->nullable(); // misalnya untuk menyimpan nama file atau path
