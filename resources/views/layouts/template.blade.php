@@ -144,7 +144,7 @@
               </li>
               <li class="nav-item">
                 <a href="{{ route('suratPernyataan.dataRequestSuratPernyataan') }}" class="nav-link {{ request()->is('surat_keterangan/data_request') ? 'active' : '' }}">
-                  <i class="bi bi-file-earmark-text"></i>
+                  <i class="bi bi-file-earmark-ruled"></i>
                   <p>Surat Keterangan</p>
                 </a>
               </li>
@@ -182,7 +182,7 @@
               </li>
               <li class="nav-item">
                 <a href="{{ route('surat_keterangan') }}" class="nav-link {{ request()->is('surat_keterangan') ? 'active' : '' }}">
-                  <i class="bi bi-award"></i>
+                  <i class="bi bi-file-earmark-ruled"></i>
                   <p>Surat Keterangan</p>
                 </a>
               </li>

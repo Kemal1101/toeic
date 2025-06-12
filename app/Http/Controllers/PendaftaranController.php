@@ -10,6 +10,10 @@ use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Response;
+use PhpOffice\PhpSpreadsheet\Style\Font;
 
 class PendaftaranController extends Controller
 {
@@ -316,5 +320,122 @@ class PendaftaranController extends Controller
         return $pdf->stream('Data_Pendaftar_' . date('Ymd_His') . '.pdf');
     }
 
+    public function view($type, $encrypted)
+    {
+        try {
+            $filename = Crypt::decryptString($encrypted);
+
+            switch ($type) {
+                case 'ktmktp':
+                    $path = public_path('uploads/ktmktp/' . $filename);
+                    break;
+                case 'pasfoto':
+                    $path = public_path('uploads/pasfoto/' . $filename);
+                    break;
+                default:
+                    abort(404, 'Tipe file tidak dikenali.');
+            }
+
+            if (file_exists($path)) {
+                return response()->file($path);
+            } else {
+                abort(404, 'File tidak ditemukan.');
+            }
+
+        } catch (\Exception $e) {
+            abort(400, 'Link tidak valid.');
+        }
+    }
+    public function export_modal_excel(){
+        return view('pendaftaran.modal_export_excel');
+    }
+    public function export_excel(Request $request)
+    {
+        $query = Data_PendaftaranModel::with('user');
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->tahun);
+        }
+
+        // Filter berdasarkan status verifikasi
+        if ($request->filled('verifikasi_data')) {
+            $query->where('verifikasi_data', $request->verifikasi_data);
+        }
+
+        // load library excel
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        // ambil sheet yang aktif
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'NIM');
+        $sheet->setCellValue('B1', 'Nama');
+        $sheet->setCellValue('C1', 'NIK');
+        $sheet->setCellValue('D1', 'No WA');
+        $sheet->setCellValue('E1', 'Alamat Asal');
+        $sheet->setCellValue('F1', 'Alamat Sekarang');
+        $sheet->setCellValue('G1', 'Jurusan');
+        $sheet->setCellValue('H1', 'Prodi');
+        $sheet->setCellValue('I1', 'Kampus');
+        $sheet->setCellValue('J1', 'Pas Foto');
+        $sheet->setCellValue('K1', 'KTM/KTP');
+
+
+        $sheet->getStyle('A1:I1')->getFont()->setBold(true); // bold header
+        $no = 1; // nomor data dimulai dari 1
+        $baris = 2; // baris data dimulai dari baris ke 2
+        foreach ($query->get() as $key => $value) {
+            $encryptedKTP = Crypt::encryptString($value->ktm_atau_ktp);
+            $linkktpktm = route('file.view', ['type' => 'ktmktp', 'encrypted' => $encryptedKTP]);
+
+            $encryptedFoto = Crypt::encryptString($value->pas_foto);
+            $linkpasfoto = route('file.view', ['type' => 'pasfoto', 'encrypted' => $encryptedFoto]);
+            // $linkktp = asset('uploads/ktmktp/' . $value->ktm_atau_ktp);
+
+            $sheet->setCellValue('A'.$baris, $value->user->username);
+            $sheet->setCellValue('B'.$baris, $value->user->nama_lengkap);
+            $sheet->setCellValue('C'.$baris, $value->nik);
+            $sheet->setCellValue('D'.$baris, $value->no_wa);
+            $sheet->setCellValue('E'.$baris, $value->alamat_asal);
+            $sheet->setCellValue('F'.$baris, $value->alamat_sekarang);
+            $sheet->setCellValue('G'.$baris, $value->jurusan);
+            $sheet->setCellValue('H'.$baris, $value->program_studi);
+            $sheet->setCellValue('I'.$baris, $value->kampus);
+
+            $sheet->setCellValue('J'.$baris, 'Lihat File Pas Foto');
+            $sheet->getStyle('J' . $baris)->getFont()->getColor()->setRGB('0000FF'); // Biru
+            $sheet->getStyle('J' . $baris)->getFont()->setUnderline(Font::UNDERLINE_SINGLE); // Garis bawah
+            $sheet->getCell('J'.$baris)->getHyperlink()->setUrl($linkpasfoto);
+
+            $sheet->setCellValue('K' . $baris, 'Lihat File KTM/KTP');
+            $sheet->getStyle('K' . $baris)->getFont()->getColor()->setRGB('0000FF'); // Biru
+            $sheet->getStyle('K' . $baris)->getFont()->setUnderline(Font::UNDERLINE_SINGLE); // Garis bawah
+            $sheet->getCell('K' . $baris)->getHyperlink()->setUrl($linkktpktm);
+
+            $baris++;
+            $no++;
+        }
+        foreach(range('A', 'K') as $columnID) {
+            $sheet->getColumnDimension($columnID)
+                ->setAutoSize(true);
+        }
+
+        $sheet->setTitle('Data Pendaftar Toeic'); // set title sheet
+
+        $writer = IOFactory :: createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data Pendaftar Toeic '.date('Y-m-d H:i:s').'.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument. spreadsheetml. sheet');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header ('Cache-Control: max-age=0');
+        header ('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT' );
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s' ) . ' GMT' );
+        header ('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+    }
 
 }

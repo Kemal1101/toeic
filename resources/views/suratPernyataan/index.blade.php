@@ -13,21 +13,31 @@
     <p>
         Silakan ajukan surat keterangan apabila Anda memenuhi kriteria di atas.
     </p>
+
     @php
         use App\Models\SuratPernyataanModel;
 
-        $sudahRequestSurat = SuratPernyataanModel::where('user_id', Auth::id())->exists();
+        $sudahRequestSurat = SuratPernyataanModel::where('user_id', Auth::id())->first();
     @endphp
 
-    <button class="btn mt-3 {{ $sudahRequestSurat ? 'btn-secondary' : 'btn-primary' }}"
-            onclick="{{ $sudahRequestSurat ? '' : "modalAction('" . route('suratPernyataan.upload') . "')" }}"
-            {{ $sudahRequestSurat ? 'disabled' : '' }}
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            title="{{ $sudahRequestSurat ? 'Anda sudah mengajukan permintaan surat.' : '' }}">
+    <button
+        class="btn mt-3 {{ $sudahRequestSurat ? 'btn-secondary' : 'btn-primary' }}"
+        onclick="{{ $sudahRequestSurat ? '' : "modalAction('" . route('suratPernyataan.upload') . "')" }}"
+        {{ $sudahRequestSurat ? 'disabled' : '' }}
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="{{ $sudahRequestSurat ? 'Anda sudah mengajukan permintaan surat.' : '' }}"
+    >
         Request Surat Keterangan Mengikuti
     </button>
+
+    @if ($sudahRequestSurat && strtoupper($sudahRequestSurat->verifikasi_data) === 'TERVERIFIKASI')
+        <a href="{{ route('suratPernyataan.export_ajax') }}" class="btn btn-success mt-3">
+            Generate Surat
+        </a>
+    @endif
 </div>
+
 @endsection
 
 <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog"

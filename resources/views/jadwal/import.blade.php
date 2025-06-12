@@ -57,8 +57,10 @@
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
-                           dataJadwal.ajax.reload();
                         } else {
                             $.each(response.msgField, function (prefix, val) {
                                 $('#error-' + prefix).text(val[0]);
@@ -67,6 +69,9 @@
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
                         }
                     },
@@ -75,6 +80,9 @@
                             icon: 'error',
                             title: 'Gagal',
                             text: 'Terjadi kesalahan saat mengirim data.'
+                        }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                         });
                     }
                 });

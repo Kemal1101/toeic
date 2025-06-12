@@ -12,8 +12,12 @@
                     <label>Download Contoh File</label>
                     <a href="{{ asset('template/data_nilai_template.xlsx') }}" class="btn btn-info btn-sm" download><i class="fa fa-file-excel"></i>Download</a>
                     <small id="error-kategori_id" class="error-text form-text text-danger"></small>
-                </div>
-            <div class="form-group">
+            </div>
+            <div class="form-group mt-3">
+                Website untuk convert PDF ke
+                <a href="https://www.ilovepdf.com/pdf_to_excel" target="_blank" class="btn btn-link p-0 align-baseline">Excel</a>
+            </div>
+            <div class="form-group mt-3">
               <label for="data_nilai">Pilih File</label>
               <input type="file" name="data_nilai" id="data_nilai" class="form-control" required>
               <small id="error-data_nilai" class="error-text text-danger"></small>
@@ -57,8 +61,10 @@
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
-                            dataNilai.ajax.reload();
                         } else {
                             $.each(response.msgField, function (prefix, val) {
                                 $('#error-' + prefix).text(val[0]);
@@ -67,6 +73,9 @@
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
                         }
                     },
@@ -75,6 +84,9 @@
                             icon: 'error',
                             title: 'Gagal',
                             text: 'Terjadi kesalahan saat mengirim data.'
+                        }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                         });
                     }
                 });

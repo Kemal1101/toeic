@@ -145,4 +145,18 @@ class NilaiController extends Controller
         }
         return redirect('/');
     }
+
+    public function confirm_ajax(String $id){
+        $nilai = NilaiModel::find($id);
+        return view('nilai.confirm_ajax', ['nilai' => $nilai]);
+    }
+
+    public function delete_ajax(Request $request){
+        $nilai = NilaiModel::find(request()->id);
+        $nilai->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Data nilai berhasil dihapus.'
+        ]);
+    }
 }

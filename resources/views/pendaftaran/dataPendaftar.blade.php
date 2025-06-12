@@ -81,11 +81,15 @@
     </div>
 
     <div class="d-flex justify-content-end mt-3 mb-1">
-    <button type="button" class="btn btn-sm btn-primary"
-        onclick="modalActionExportPdf('{{ route('data_pendaftar.modal_export_pdf') }}')">
-        Export Pendaftar
-    </button>
-</div>
+        <button type="button" class="btn btn-sm btn-primary mx-1"
+            onclick="modalActionExportPdf('{{ route('data_pendaftar.modal_export_pdf') }}')">
+            Export Pendaftar PDF
+        </button>
+        <button type="button" class="btn btn-sm btn-success mx-1"
+            onclick="modalActionExportPdf('{{ route('data_pendaftar.modal_export_excel') }}')">
+            Export Pendaftar Excel
+        </button>
+    </div>
 
 @endsection
 
@@ -268,6 +272,8 @@ $(document).ready(function () {
                         icon: 'error',
                         title: 'Gagal',
                         text: 'Tidak dapat mengubah status.'
+                    }).then(() => {
+                        location.reload(); // Reload setelah user klik "Oke"
                     });
                 }
             });

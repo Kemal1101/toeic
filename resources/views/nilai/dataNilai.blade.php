@@ -100,10 +100,10 @@ $(document).ready(function() {
                 orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
                 searchable: false,
                 render: function(data, type, row) {
-                    let url_hapus = `{{ route('pendaftaran.confirm_ajax', ['id' => ':id']) }}`;
-                    url_hapus = url_hapus.replace(':id', row.data_pendaftaran_id);
+                    let url_hapus = `{{ route('nilai.confirm_ajax', ['id' => ':id']) }}`;
+                    url_hapus = url_hapus.replace(':id', row.nilai_id);
 
-                    return `<button button onclick="modalActionHapusEdit('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
+                    return `<button button onclick="modalAction('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
                 }
             }
         ],

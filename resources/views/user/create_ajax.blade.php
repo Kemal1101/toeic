@@ -107,6 +107,9 @@
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
 
                             if (typeof dataUser !== 'undefined') {
@@ -122,6 +125,9 @@
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
                         }
                     }

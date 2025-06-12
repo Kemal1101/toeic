@@ -152,7 +152,7 @@ $(document).ready(function() {
                 text: response.message
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dataSertif.ajax.reload();
+                    location.reload();
                 }
             });
         },
@@ -161,7 +161,10 @@ $(document).ready(function() {
                 icon: 'error',
                 title: 'Gagal',
                 text: 'Status gagal diperbarui.'
-            });
+            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
+                            });
         }
     });
 });

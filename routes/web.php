@@ -69,8 +69,13 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/modal_export_pdf', [PendaftaranController::class, 'export_modal'])->name('data_pendaftar.modal_export_pdf');
         Route::get('/export_pdf', [PendaftaranController::class, 'export_pdf'])->name('data_pendaftar.export_pdf');
+
+        Route::get('/modal_export_excel', [PendaftaranController::class, 'export_modal_excel'])->name('data_pendaftar.modal_export_excel');
+        Route::get('/export_excel', [PendaftaranController::class, 'export_excel'])->name('data_pendaftar.export_excel');
+
         Route::post('/setting/toggle-pendaftaran', [GeneralSettingController::class, 'togglePendaftaran'])->name('setting.togglePendaftaran');
 
+        Route::get('/file-view/{type}/{encrypted}', [PendaftaranController::class, 'view'])->name('file.view');
     });
 
      Route::group(['prefix' => 'jadwal'], function () {
@@ -96,6 +101,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/import', [NilaiController::class, 'import'])->name('nilai.import');
         Route::post('/import_ajax', [NilaiController::class, 'import_ajax'])->name('nilai.import_ajax');
+
+        Route::get('/{id}/delete_ajax', [NilaiController::class, 'confirm_ajax'])->name('nilai.confirm_ajax');
+        Route::delete('/{id}/delete_ajax', [NilaiController::class, 'delete_ajax'])->name('nilai.delete_ajax');
     });
 
     Route::group(['prefix' => 'sertifikat'], function () {
@@ -133,6 +141,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/{id}/edit_ajax', [SuratKeteranganController::class, 'edit_ajax'])->name('suratPernyataan.edit_ajax');
         Route::put('/{id}/update_ajax', [SuratKeteranganController::class, 'update_ajax'])->name('suratPernyataan.update_ajax');
+
+        Route::get('/{id}/delete_ajax', [SuratKeteranganController::class, 'confirm_ajax'])->name('suratPernyataan.confirm_ajax');
+        Route::delete('/{id}/delete_ajax', [SuratKeteranganController::class, 'delete_ajax'])->name('suratPernyataan.delete_ajax');
     });
 });
 

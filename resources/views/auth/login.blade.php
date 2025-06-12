@@ -289,6 +289,8 @@
                     icon: 'error',
                     title: 'Terjadi Kesalahan',
                     text: response.message
+                  }).then(function () {
+                    window.location = response.redirect;
                   });
                 }
               }

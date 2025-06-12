@@ -88,8 +88,10 @@
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
-                            dataJadwal.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function (prefix, val) {
@@ -100,6 +102,9 @@
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
                         }
                     }

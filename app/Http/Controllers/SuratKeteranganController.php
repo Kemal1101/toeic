@@ -292,4 +292,18 @@ class SuratKeteranganController extends Controller
 
         $pdf->Output('I', 'Surat Pernyataan TOEIC.pdf');
     }
+
+    public function confirm_ajax(String $id){
+        $sk = suratPernyataanModel::find($id);
+        return view('suratPernyataan.confirm_ajax', ['sk' => $sk]);
+    }
+
+    public function delete_ajax(Request $request){
+        $sk = suratPernyataanModel::find(request()->id);
+        $sk->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Data nilai berhasil dihapus.'
+        ]);
+    }
 }

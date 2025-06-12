@@ -32,6 +32,7 @@
                         <th>NIM</th>
                         <th>Tanggal Pelaksanaan Ujian</th>
                         <th>Jam Pelaksanaaan Ujian</th>
+                        <th>Link Zoom</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -75,19 +76,17 @@
                 { data: 'username', name: 'user.username' },
                 { data: 'tanggal_pelaksanaan_tanggal', name: 'tanggal_pelaksanaan_tanggal' },
                 { data: 'tanggal_pelaksanaan_jam', name: 'tanggal_pelaksanaan_jam' },
+                { data: 'link_zoom', name: 'link_zoom' },
                 {
                     data: null,
                     name: 'aksi',
                     orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
                     searchable: false,
                     render: function(data, type, row) {
-                        let url_edit = `{{ route('user.edit_ajax', ['id' => ':id']) }}`;
-                        url_edit = url_edit.replace(':id', row.user_id);
                         let url_hapus = `{{ route('jadwal.confirm_ajax', ['id' => ':id']) }}`;
                         url_hapus = url_hapus.replace(':id', row.tanggal_pelaksanaan_id);
 
-                        return `<button onclick="modalAction('${url_edit}')" class="btn btn-sm btn-primary">Edit</button>
-                                <button onclick="modalAction('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
+                        return `<button onclick="modalAction('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
                     }
                 }
             ],

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('tanggal_pelaksanaan_id');
             $table->unsignedBigInteger('user_id')->index();
             $table->dateTime('tanggal_pelaksanaan');
+            $table->varchar('link_zoom', 200);
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('user');

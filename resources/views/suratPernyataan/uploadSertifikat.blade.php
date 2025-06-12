@@ -111,6 +111,9 @@
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
                                 text: response.message
+                            }).then(() => {
+                                // Reload halaman setelah klik OK
+                                location.reload();
                             });
                         }
                     }

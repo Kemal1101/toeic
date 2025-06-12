@@ -37,12 +37,17 @@ class JadwalController extends Controller
                 return $jadwal->user ? $jadwal->user->username : '-';
             })
             ->addColumn('tanggal_pelaksanaan_tanggal', function ($jadwal) {
+                \Carbon\Carbon::setLocale('id');
+
                 return $jadwal->tanggal_pelaksanaan
                     ? \Carbon\Carbon::parse($jadwal->tanggal_pelaksanaan)->translatedFormat('d F Y')
                     : '-';
             })
             ->addColumn('tanggal_pelaksanaan_jam', function ($jadwal) {
                 return $jadwal->tanggal_pelaksanaan ? \Carbon\Carbon::parse($jadwal->tanggal_pelaksanaan)->format('h:i A') : '-';
+            })
+            ->addColumn('link_zoom', function ($jadwal) {
+                return $jadwal->link_zoom ? $jadwal->link_zoom : '-';
             })
 
             ->make(true);
@@ -96,6 +101,7 @@ class JadwalController extends Controller
                     $username = trim($value['A'] ?? '');
                     $tanggal = $value['B'] ?? null;
                     $jam = $value['C'] ?? null;
+                    $link_zoom = $value['D'] ?? null;
 
                     if (!$username || $tanggal === null || $jam === null) {
                         continue;
@@ -127,6 +133,7 @@ class JadwalController extends Controller
                         $insert[] = [
                             'user_id' => $user->user_id,
                             'tanggal_pelaksanaan' => $tanggalPelaksanaan,
+                            'link_zoom' => $link_zoom,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ];

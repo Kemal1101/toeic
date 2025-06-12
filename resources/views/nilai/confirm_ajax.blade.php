@@ -1,4 +1,4 @@
-@empty($jadwal)
+@empty($nilai)
 <div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
            <div class="modal-content">
@@ -10,13 +10,13 @@
                 <div class="alert alert-danger">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                     Data yang anda cari tidak ditemukan</div>
-                <a href="{{ route('jadwal') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ route('nilai') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 </div>
 @else
-     <form action="{{ route('jadwal.delete_ajax', ['id' => $jadwal->tanggal_pelaksanaan_id]) }}" method="POST" id="form-delete">
+     <form action="{{ route('nilai.delete_ajax', ['id' => $nilai->nilai_id]) }}" method="POST" id="form-delete">
         @csrf
         @method('DELETE')
         <div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
@@ -33,22 +33,28 @@
                <table class="table table-sm table-bordered table-striped">
                     <tr>
                         <th class="text-right col-3 text-nowrap">Nama Lengkap </th>
-                        <td class="col-9 text-nowrap">{{ $jadwal->user->nama_lengkap }}</td>
+                        <td class="col-9 text-nowrap">{{ $nilai->user->nama_lengkap }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3 text-nowrap">NIM </th>
-                        <td class="col-9 text-nowrap">{{ $jadwal->user->username }}</td>
+                        <td class="col-9 text-nowrap">{{ $nilai->user->username }}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3 text-nowrap">Tanggal Pelaksanaan Ujian </th>
+                        <th class="text-right col-3 text-nowrap">Nilai Listening </th>
                         <td class="col-9 text-nowrap">
-                            {{ \Carbon\Carbon::parse($jadwal->tanggal_pelaksanaan)->translatedFormat('d F Y') }}
+                            {{ $nilai->listening }}
                         </td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3 text-nowrap">Jam Pelaksanaan Ujian </th>
+                        <th class="text-right col-3 text-nowrap">Nilai Reading </th>
                         <td class="col-9 text-nowrap">
-                            {{ \Carbon\Carbon::parse($jadwal->tanggal_pelaksanaan)->format('h:i A') }}
+                            {{ $nilai->reading }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3 text-nowrap">Nilai Total </th>
+                        <td class="col-9 text-nowrap">
+                            {{ $nilai->total }}
                         </td>
                     </tr>
                 </table>
@@ -74,15 +80,14 @@
                         success: function(response) {
                             if(response.status){
                                 $('#myModal').modal('hide');
-                                success: function (response) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
                                     text: response.message
                                 }).then(() => {
-                                    location.reload(); // Reload setelah user klik "Oke"
-                                });
-                            };
+                                // Reload halaman setelah klik OK
+                                location.reload();
+                            });
                             }else{
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {
@@ -93,9 +98,9 @@
                                     title: 'Terjadi Kesalahan',
                                     text: response.message
                                 }).then(() => {
-                                    // Reload halaman setelah klik OK
-                                    location.reload();
-                                });
+                                // Reload halaman setelah klik OK
+                                location.reload();
+                            });
                             }
                         }
                     });

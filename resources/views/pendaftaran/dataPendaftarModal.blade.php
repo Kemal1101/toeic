@@ -157,6 +157,9 @@ function notes(btn) {
                 icon: 'error',
                 title: 'Gagal',
                 text: 'Gagal memuat modal. Silakan coba lagi.'
+            }).then(() => {
+                // Reload halaman setelah klik OK
+                location.reload();
             });
         }
     });

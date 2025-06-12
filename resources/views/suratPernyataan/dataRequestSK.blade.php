@@ -115,33 +115,21 @@
 
     }
     function modalActionHapusEdit(url) {
-    $.get(url, function(response) {
-        $('#myModal').remove(); // bersihkan modal sebelumnya
-        $('body').append(response); // tambahkan modal baru ke body
-        const modalEl = document.getElementById('myModal');
-        const modalInstance = new bootstrap.Modal(modalEl);
-        modalInstance.show();
-    }).fail(function() {
-        alert('Gagal memuat modal.');
-    });
+        $.get(url, function(response) {
+            $('#myModal').remove(); // bersihkan modal sebelumnya
+            $('body').append(response); // tambahkan modal baru ke body
+            const modalEl = document.getElementById('myModal');
+            const modalInstance = new bootstrap.Modal(modalEl);
+            modalInstance.show();
+        }).fail(function() {
+            alert('Gagal memuat modal.');
+        });
     }
 
-    function modalActionExportPdf(url) {
-    $.get(url, function(response) {
-        $('#myModal').remove(); // bersihkan modal sebelumnya
-        $('body').append(response); // tambahkan modal baru ke body
-        const modalEl = document.getElementById('myModal');
-        const modalInstance = new bootstrap.Modal(modalEl);
-        modalInstance.show();
-    }).fail(function() {
-        alert('Gagal memuat modal.');
-    });
-    }
-
-let dataPendaftaran;
+let dataSK;
 
 $(document).ready(function() {
-        dataPendaftaran = $('#table_pendaftar').DataTable({
+        dataSK = $('#table_pendaftar').DataTable({
         processing: true,
         serverSide: true,
         // deferLoading: 0, // mencegah load otomatis
@@ -201,8 +189,8 @@ $(document).ready(function() {
                 orderable: false,      // <--- PENTING: Matikan pengurutan untuk kolom ini
                 searchable: false,
                 render: function(data, type, row) {
-                    let url_hapus = `{{ route('pendaftaran.confirm_ajax', ['id' => ':id']) }}`;
-                    url_hapus = url_hapus.replace(':id', row.data_pendaftaran_id);
+                    let url_hapus = `{{ route('suratPernyataan.confirm_ajax', ['id' => ':id']) }}`;
+                    url_hapus = url_hapus.replace(':id', row.surat_pernyataan_id);
 
                     return `<button button onclick="modalActionHapusEdit('${url_hapus}')" class="btn btn-sm btn-danger">Hapus</button>`;
                 }
