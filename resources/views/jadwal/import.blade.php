@@ -1,32 +1,43 @@
 <div class="modal fade" id="myModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form id="form-import" method="POST" enctype="multipart/form-data" action="{{ route('jadwal.import_ajax') }}">
-          @csrf
-          <div class="modal-header">
-            <h5 class="modal-title">Import Data User</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="form-import" method="POST" enctype="multipart/form-data" action="{{ route('jadwal.import_ajax') }}">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title">Import Data User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Info Alert -->
+          <div class="alert alert-info" role="alert">
+            <i class="fa fa-info-circle"></i> Pastikan tata letak file Excel sesuai dengan <strong>template</strong> yang disediakan agar proses import berhasil.
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-                    <label>Download Contoh File</label>
-                    <a href="{{ asset('template/jadwal_pelaksanaan_template.xlsx') }}" class="btn btn-info btn-sm" download><i class="fa fa-file-excel"></i>Download</a>
-                    <small id="error-kategori_id" class="error-text form-text text-danger"></small>
-                </div>
-            <div class="form-group">
-              <label for="data_jadwal_peserta">Pilih File</label>
-              <input type="file" name="data_jadwal_peserta" id="data_jadwal_peserta" class="form-control" required>
-              <small id="error-data_jadwal_peserta" class="error-text text-danger"></small>
-            </div>
+
+          <div class="form-group">
+            <label>Download Contoh File: </label>
+            <a href="{{ asset('template/jadwal_pelaksanaan_template.xlsx') }}" class="btn btn-info btn-sm" download>
+              <i class="fa fa-file-excel"></i> Download
+            </a>
+            <small id="error-kategori_id" class="error-text form-text text-danger"></small>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-primary">Upload</button>
+
+          <div class="form-group mt-3">
+            <label for="data_jadwal_peserta">Pilih File</label>
+            <input type="file" name="data_jadwal_peserta" id="data_jadwal_peserta" class="form-control" required>
+            <small id="error-data_jadwal_peserta" class="error-text text-danger"></small>
           </div>
-        </form>
-      </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
+
 
 
 <script>
