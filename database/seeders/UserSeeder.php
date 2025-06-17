@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'username' => 'admin',
             'password' => Hash::make('1234567890'),
-            'nama_lengkap' => 'Muhammad Kemal Syahru Ramadhan',
+            'nama_lengkap' => 'Izza',
             'tanggal_lahir' => '2003-11-01',
             'tempat_lahir' => 'Surabaya'
         ];
